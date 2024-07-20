@@ -1,6 +1,6 @@
 import logo from './logo.svg';
 import './App.css';
-import BasicTextFields from './pages/Profile';
+import TextBox from './pages/Homepage';
 
 
 function App() {
@@ -20,7 +20,7 @@ function App() {
           Learn React
         </a>
       </header> */}
-      <BasicTextFields />
+      <TextBox />
     </div>
   );
 }

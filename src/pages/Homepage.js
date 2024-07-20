@@ -4,17 +4,13 @@ import TextField from '@mui/material/TextField';
 import passwordRules from '../rules';
 import Rule from '../component/RuleUI';
 
-export default function BasicTextFields() {
+export default function TextBox() {
     const [searchTerm, setSearchTerm] = useState('');
     const [gameOver, setGameOver] = useState(false);
     const [rulesChecker, setRulesChecker] = useState(Array(20).fill(0));
     const X = 10;
     let rulesCounter=0;
     const [rulesComponents, setRulesComponents] = useState([]);
-
-    
-
-    
 
     const handleSearch = (e) => {
         const inputValue = e.target.value;
@@ -27,7 +23,7 @@ export default function BasicTextFields() {
     
     const checkRules = (words) => {
     const newRulesComponents = [];
-
+    let allPassed = true;
     if (words.length != 0) {
         if (passwordRules.rule1(words)) {
             console.log('Rule 1 passed: Length greater than 5');
@@ -36,6 +32,8 @@ export default function BasicTextFields() {
         } else {
             console.log('Rule 1 failed: Length not greater than 5');
             newRulesComponents.unshift(<Rule index={1} text="Your password must be at least 5 characters." passed={false} />);
+            allPassed = false;
+            
         }
     }
 
@@ -47,6 +45,7 @@ export default function BasicTextFields() {
         } else {
             console.log('Rule 2 failed: Does not contain any digit');
             newRulesComponents.unshift(<Rule index={2} text="Your password must include a number." passed={false} />);
+            allPassed = false;
         }
     }
 
@@ -58,6 +57,7 @@ export default function BasicTextFields() {
         } else {
             console.log('Rule 3 failed: Does not contain any uppercase letter');
             newRulesComponents.unshift(<Rule index={3} text="Your password must include an uppercase letter." passed={false} />);
+            allPassed = false;
         }
     }
 
@@ -69,6 +69,7 @@ export default function BasicTextFields() {
         } else {
             console.log('Rule 4 failed: Does not contain non-alphanumeric characters');
             newRulesComponents.unshift(<Rule index={4} text="Your password must include a non-alphanumeric character." passed={false} />);
+            allPassed = false;
         }
     }
 
@@ -80,6 +81,7 @@ export default function BasicTextFields() {
         } else {
             console.log(`Rule 5 failed: Sum of digits does not equal ${X}`);
             newRulesComponents.unshift(<Rule index={5} text={`Sum of digits must equal ${X}`} passed={false} />);
+            allPassed = false;
         }
     }
 
@@ -91,6 +93,7 @@ export default function BasicTextFields() {
         } else {
             console.log('Rule 6 failed: Does not contain month names');
             newRulesComponents.unshift(<Rule index={6} text="Your password must include a month name." passed={false} />);
+            allPassed = false;
         }
     }
 
@@ -102,6 +105,7 @@ export default function BasicTextFields() {
         } else {
             console.log('Rule 7 failed: Does not contain Roman numerals');
             newRulesComponents.unshift(<Rule index={7} text="Your password must include a Roman numeral." passed={false} />);
+            allPassed = false;
         }
     }
 
@@ -113,6 +117,7 @@ export default function BasicTextFields() {
         } else {
             console.log('Rule 8 failed: Does not contain country names');
             newRulesComponents.unshift(<Rule index={8} text="Your password must include a country name." passed={false} />);
+            allPassed = false;
         }
     }
 
@@ -124,6 +129,7 @@ export default function BasicTextFields() {
         } else {
             console.log(`Rule 9 failed: Product of Roman numerals does not equal ${X}`);
             newRulesComponents.unshift(<Rule index={9} text={`Product of Roman numerals must equal ${X}`} passed={false} />);
+            allPassed = false;
         }
     }
 
@@ -134,11 +140,13 @@ export default function BasicTextFields() {
         }
         else{
             newRulesComponents.unshift(<Rule index={10} text={`Oh no! Your password is on fire 🔥. Quick, put it out!`} passed={true} />);
+            allPassed = false;
         }
     }
     if (rulesChecker[9] == 1) {
         rulesChecker[10] = 1;
         newRulesComponents.push(<Rule index={11} text="Password must satisfy rule 11" passed={true} />);
+        //allpased
     }
 
     if (rulesChecker[10] == 1) {
@@ -150,6 +158,7 @@ export default function BasicTextFields() {
         } else {
             console.log('Rule 12 failed: Does not contain captcha');
             newRulesComponents.unshift(<Rule index={12} text="Your password must include the captcha." passed={false} />);
+            allPassed = false;
         }
     }
 
@@ -161,12 +170,14 @@ export default function BasicTextFields() {
         } else {
             console.log('Rule 13 failed: Does not contain leap year');
             newRulesComponents.unshift(<Rule index={13} text="Your password must include a leap year." passed={false} />);
+            allPassed = false;
         }
     }
 
     if (rulesChecker[12] == 1) {
         rulesChecker[13] = 1;
         newRulesComponents.push(<Rule index={14} text="Password must satisfy rule 14" passed={true} />);
+        //allpases
     }
 
     if (rulesChecker[13] == 1) {
@@ -178,6 +189,7 @@ export default function BasicTextFields() {
         } else {
             console.log('Rule 15 failed: Contains forbidden letters');
             newRulesComponents.unshift(<Rule index={15} text="Your password must not contain forbidden letters." passed={false} />);
+            allPassed = false;
         }
     }
 
@@ -189,6 +201,7 @@ export default function BasicTextFields() {
         } else {
             console.log('Rule 16 failed: Does not contain IRK-related phrases');
             newRulesComponents.unshift(<Rule index={16} text="Your password must include IRK-related phrases." passed={false} />);
+            allPassed = false;
         }
     }
 
@@ -201,6 +214,7 @@ export default function BasicTextFields() {
         } else {
             console.log(`Rule 17 failed: Percentage of digits is less than ${X17}%`);
             newRulesComponents.unshift(<Rule index={17} text={`Percentage of digits must be at least ${X17}%`} passed={false} />);
+            allPassed = false;
         }
     }
 
@@ -212,6 +226,7 @@ export default function BasicTextFields() {
         } else {
             console.log('Rule 18 failed: Does not contain length of text');
             newRulesComponents.unshift(<Rule index={18} text="Your password must include the length of the text." passed={false} />);
+            allPassed = false;
         }
     }
 
@@ -223,6 +238,7 @@ export default function BasicTextFields() {
         } else {
             console.log('Rule 19 failed: Length of text is not a prime number');
             newRulesComponents.unshift(<Rule index={19} text="Your password's length must be a prime number." passed={false} />);
+            allPassed = false;
         }
     }
 
@@ -235,7 +251,11 @@ export default function BasicTextFields() {
         } else {
             console.log('Does not contain current time in text');
             newRulesComponents.unshift(<Rule index={20} text="Your password must include the current time." passed={false} />);
+            allPassed = false;
         }
+    }
+    if (rulesChecker[19]==1 && allPassed){
+        console.log("win");
     }
 
     setRulesComponents(newRulesComponents);
