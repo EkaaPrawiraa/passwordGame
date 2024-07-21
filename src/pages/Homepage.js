@@ -3,6 +3,7 @@ import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import passwordRules from '../rules';
 import Rule from '../component/RuleUI';
+import Typography from '@mui/material/Typography';
 
 export default function TextBox() {
     const [searchTerm, setSearchTerm] = useState('');
@@ -24,7 +25,7 @@ export default function TextBox() {
     const checkRules = (words) => {
     const newRulesComponents = [];
     let allPassed = true;
-    if (words.length != 0) {
+    if (true) {
         if (passwordRules.rule1(words)) {
             console.log('Rule 1 passed: Length greater than 5');
             rulesChecker[0] = 1;
@@ -278,17 +279,50 @@ export default function TextBox() {
 
   return (
     <Box
-      component="form"
-      sx={{
+    component="form"
+    sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        // justifyContent: 'center',
+        paddingTop :'45px',
+        height: '100vh',
         '& > :not(style)': { m: 1, width: '25ch' },
-      }}
-      noValidate
-      autoComplete="off"
+    }}
+    noValidate
+    autoComplete="off"
     >
-      <TextField id="standard-basic" label="PASSWORDS" variant="standard" value={searchTerm} onChange={handleSearch} />
-      {/* <Rule index={1} text="Your password must be at least 5 characters." passed={rulesChecker[0]} />
-      <Rule index={2} text="Your password must include a number." passed={rulesChecker[1]} /> */}
-      {rulesComponents}
-    </Box>
-  );
+    <Typography variant="h9" gutterBottom >
+                Please choose a password
+            </Typography>
+            <Box
+                sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                }}
+            >
+                <TextField 
+                    id="standard-basic" 
+                    variant="outlined" 
+                    value={searchTerm} 
+                    onChange={handleSearch}
+                    sx={{
+                        borderRadius: '15px',
+                        backgroundColor: '#fff',
+                        '& .MuiOutlinedInput-root': {
+                            '& fieldset': {
+                                borderRadius: '15px',
+                                // borderWidth: '2px',
+                                borderColor:'black',
+                            },
+                        },
+                    }} 
+                />
+                <Typography variant="body1" sx={{ marginLeft: 2 }}>
+                    {searchTerm.length}
+                </Typography>
+            </Box>
+            {rulesComponents}
+        </Box>
+    );
 }
