@@ -5,10 +5,10 @@ const Rule = ({ index, text, passed }) => {
         <div style={{
             border: `1px solid ${passed ? 'green' : 'red'}`,
             backgroundColor: `${passed ? '#ccffcc' : '#ffcccc'}`,
-            // padding: '10px',
-            // margin: '5px 0',
             borderRadius: '10px',
-            boxShadow: '0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24)'
+            boxShadow: '0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24)',
+            width: '30%', // Mengatur lebar komponen Rule
+            marginBottom: '10px'
         }}>
             <div style={{ 
                 display: 'flex', 
@@ -23,21 +23,23 @@ const Rule = ({ index, text, passed }) => {
                     {passed ? '✓' : '✗'}
                 </span>
                 <strong style={{ 
-                    fontSize: '16px'
+                    fontSize: '16px',
+                    color : 'black',
+                    paddingTop : 2,
                 }}>Rule {index}</strong>
             </div>
             <div style={{
                 backgroundColor: `${passed ? '#e6ffed' : '#ffe6e6'}`,
-                borderTopLeftRadius:'0',
-                borderTopRightRadius:'0',
-                borderRadius: '10px',
+                borderBottomLeftRadius: '10px',
+                borderBottomRightRadius:'10px',
                 padding: '5px'
             }}>
                 <p style={{
                     margin: 0,
-                    fontSize: '14px',
+                    fontSize: '20px',
                     color: 'black',
-                    textAlign: 'left'
+                    textAlign: 'left',
+                    padding : 10,
                 }}>{text}</p>
             </div>
         </div>

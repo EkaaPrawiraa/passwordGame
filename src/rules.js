@@ -3,8 +3,7 @@ const moment = require('moment');
 
 
 
-const countries = ['indonesia', 'united states', 'france', 'germany', 'japan', 'brazil', 'australia', 'russia', 'canada', 'italy'];
-const captchas = ['captcha1', 'captcha2', 'captcha3', 'captcha4', 'captcha5', 'captcha6', 'captcha7'];
+
 
 
 function isLeapYear(year) {
@@ -80,9 +79,17 @@ function rule9(text, X) {
 function rule10(text) {
   if (text.length === 0) return text;
   if (text.includes('🔥')) {
-    return text.slice(0, -2) + '🔥'; 
+    if (text.length >= 2) {
+      return text.slice(0, -2) + '🔥'; 
+    } else {
+      return '🔥';
+    }
   } else {
-    return text.slice(0, -1) + '🔥'; 
+    if (text.length >= 1) {
+      return text.slice(0, -1) + '🔥'; 
+    } else {
+      return '🔥';
+    }
   }
 }
 
@@ -195,8 +202,6 @@ const passwordRules = {
   romanToInt,
   isLeapYear,
   isPrime,
-  countries,
-  captchas,
   cheatPassword,
 };
 export default passwordRules;
