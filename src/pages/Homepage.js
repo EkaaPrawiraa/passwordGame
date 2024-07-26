@@ -143,7 +143,7 @@ export default function TextBox() {
 
     if (rulesChecker[8] === 1 && !fireActive && !searchTerm.includes('🔥')&& !firstTime ) {
         let x = Math.floor(Math.random() * 26);
-        console.log(x);
+        // console.log(x);
         if (x === 7) {
             setSearchTerm(words.slice(0,-1)+'🔥');
         }
@@ -328,21 +328,23 @@ useEffect(() => {
 
 useEffect (()=>{
     if (rulesChecker[12] === 1 && searchTerm.includes('🐔')) {
-        const burnInterval = setInterval(() => {
+        const wormsInterval = setInterval(() => {
         if (searchTerm.length > 0) {
             if (searchTerm.split('🐛').length - 1 < 2){
                 setGameOver(true);
+                // console.log(gameOver);
             }
             else{
-                let newstr = searchTerm.replace(new RegExp('🐛', 'g'), '')
-                searchTerm(newstr);
+                let newstr = searchTerm.replace(new RegExp('🐛', 'g'), '');
+                setSearchTerm(newstr);
+                setGameOver(false);
             }
         } else {
             setGameOver(true);
-            console.log(gameOver);
+            // console.log(gameOver);
         }
     }, 2000); 
-    return () => clearInterval(burnInterval);
+    return () => clearInterval(wormsInterval);
     }
     else{
         setGameOver(true);
@@ -357,7 +359,7 @@ useEffect (()=>{
     useEffect(()=> {
         if (rulesChecker[10]==1 && !searchTerm.includes('🥚') && !rulesChecker[13]==1 ){
             setGameOver(true);
-            console.log(gameOver);
+            // console.log(gameOver);
         }
         },[searchTerm]);
     
@@ -426,7 +428,7 @@ useEffect (()=>{
                     }} 
                 />
                 <Typography variant="body1" sx={{ paddingLeft :1, }}>
-                    {searchTerm.length-(searchTerm.split('🔥').length - 1)- (searchTerm.split('🥚').length - 1)-(searchTerm.split('🐛').length - 1)} 
+                    {searchTerm.length-(searchTerm.split('🔥').length - 1)- (searchTerm.split('🥚').length - 1)-(searchTerm.split('🐛').length - 1)-(searchTerm.split('🐔').length - 1)} 
                 </Typography>
             </Box>
             {rulesComponents}

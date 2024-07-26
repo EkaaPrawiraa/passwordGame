@@ -136,14 +136,14 @@ function rule16(text) {
 
 function rule17(text, X) {
   const numDigits = (text.match(/\d/g) || []).length;
-  const totalChars = (text.length-(text.split('🔥').length - 1)- (text.split('🥚').length - 1)-(text.split('🐛').length - 1));
+  const totalChars = (text.length-(text.split('🔥').length - 1)- (text.split('🥚').length - 1)-(text.split('🐛').length - 1)-(text.split('🐔').length - 1));
   if (totalChars === 0) return false;
   const percentageDigits = (numDigits * 100) / totalChars;
   return percentageDigits >= X;
 }
 
 function rule18(text) {
-  const lengthStr = (text.length-(text.split('🔥').length - 1)- (text.split('🥚').length - 1)-(text.split('🐛').length - 1)).toString();
+  const lengthStr = (text.length-(text.split('🔥').length - 1)- (text.split('🥚').length - 1)-(text.split('🐛').length - 1)-(text.split('🐔').length - 1)).toString();
   return text.includes(lengthStr);
 }
 
