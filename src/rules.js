@@ -71,7 +71,7 @@ function rule9(text, X) {
   
   const product = values.reduce((acc, value) => acc * value, 1);
   
-  console.log('Produk dari angka Romawi:', product);
+  // console.log('Produk dari angka Romawi:', product);
   
   return product === X;
 }
@@ -80,7 +80,7 @@ function rule10(text) {
   if (text.length === 0) return text;
   if (text.includes('🔥')) {
     if (text.length >= 2) {
-      return text.slice(0, -2) + '🔥'; 
+      return text.slice(0, -3) + '🔥'; 
     } else {
       return '🔥';
     }
@@ -96,8 +96,8 @@ function rule10(text) {
 function rule11(text, X) {
   setInterval(() => {
     if (!text.includes('🥚')) {
-      console.log('Rule 11 failed: Emoji 🥚 is missing!');
-      console.log('YOU LOSE!');
+      // console.log('Rule 11 failed: Emoji 🥚 is missing!');
+      // console.log('YOU LOSE!');
       process.exit(1);
     }
   }, X);
@@ -119,7 +119,6 @@ function rule14(text, X, Y) {
   setInterval(() => {
     const countWorms = (text.match(/🐛/g) || []).length;
     if (countWorms < Y) {
-      console.log('Rule 14 failed: Chicken 🐔 needs more worms 🐛!');
       process.exit(1);
     }
   }, X);
@@ -137,14 +136,14 @@ function rule16(text) {
 
 function rule17(text, X) {
   const numDigits = (text.match(/\d/g) || []).length;
-  const totalChars = text.length;
+  const totalChars = (text.length-(text.split('🔥').length - 1)- (text.split('🥚').length - 1)-(text.split('🐛').length - 1));
   if (totalChars === 0) return false;
   const percentageDigits = (numDigits * 100) / totalChars;
   return percentageDigits >= X;
 }
 
 function rule18(text) {
-  const lengthStr = text.length.toString();
+  const lengthStr = (text.length-(text.split('🔥').length - 1)- (text.split('🥚').length - 1)-(text.split('🐛').length - 1)).toString();
   return text.includes(lengthStr);
 }
 
@@ -157,23 +156,7 @@ function rule20(text, currentTime) {
   return text.includes(currentTimeString);
 }
 const cheatPassword = () => { //belum beres
-  const X = 10;
-  const forbiddenLetters = ['a', 'e', 'i', 'o', 'u'];
-  const X17 = 20;
-  const currentTime = new Date();
-  const captcha = passwordRules.captchas[0];
-
-  let words = "A1!JulyIVUSA";
-  words += "9991";
-  words += "2020";
-  words += "I need IRK";
-  words += "333333333";
-  words += (words.length + 16).toString();
-  words += "1234";
-  const currentTimeString = moment(currentTime).format('HH:mm');
-  words += currentTimeString;
-  words += passwordRules.countries[0];
-  words += captcha;
+  let words = "indonesiajuneX19000"
 
   return words;
 }
