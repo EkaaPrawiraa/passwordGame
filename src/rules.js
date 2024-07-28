@@ -53,7 +53,7 @@ function rule7(text) {
 
 
 function rule8(text, countries) {
-  if (countries.length == 0){
+  if (countries.length === 0){
     return false;
   }
   return new RegExp(`(${countries.join('|')})`, 'i').test(text);
@@ -119,12 +119,6 @@ function rule13(text) {
 
 function rule14(text, X, Y) {
   text = text.replace('🥚', '🐔');
-  setInterval(() => {
-    const countWorms = (text.match(/🐛/g) || []).length;
-    // if (countWorms < Y) {
-    //   process.exit(1);
-    // }
-  }, X);
   return true;
 }
 

@@ -17,7 +17,6 @@ export default function TextBox() {
     const [rulesComponents, setRulesComponents] = useState([]);
     const[allPassed,setAllPassed]=useState(true);
     const [firstTime,setFirstTime]=useState(true);
-    const [score, setScore]=useState(0);
 
 
     
@@ -99,6 +98,7 @@ export default function TextBox() {
     const newRulesComponents = [];
     const anewRulesComponents = [];
     let allPassed = true;
+    
     
     if (true) {
         if (passwordRules.rule1(words,wordLength)) {
@@ -435,12 +435,7 @@ useEffect(() => {
     
     
 
-    useEffect(() => {
-        checkRules(searchTerm);
-        // console.log(countryName);
-        console.log(forbiddenLetters);
-    }, [searchTerm,countries,captchas]);
-
+   
     useEffect(() => {
         const fetchCountries = async () => {
             try {
@@ -567,13 +562,12 @@ useEffect(() => {
         setCountryNameShown(newCountryName);
       };
 
-    // const updateScore = () => {
-    //     const currentScore = calculateScore();
-    //     setScore(currentScore);
-    //     if (currentScore > highestScore) {
-    //         setHighestScore(currentScore);
-    //     }
-    // }
+      useEffect(() => {
+        checkRules(searchTerm);
+        // console.log(countryName);
+        console.log(forbiddenLetters);
+    }, [searchTerm,countries,captchas,rulesChecker,gameLevel,refreshImagesCaptchas,refreshImagesCountry]);
+
     
       
 
@@ -598,7 +592,7 @@ useEffect(() => {
             <GameModeSelector gameLevel={gameLevel} onLevelChange={setGameLevel}  />
             {rulesChecker[13] === 1 && (<ForbiddenLetterUI setForbiddenLetters={handleSetForbiddenLetters} />  )}
         </Box>
-           {rulesChecker[13]==1 && (<p>Forbidden Letters: {forbiddenLetters.join(', ')}</p>)} 
+           {rulesChecker[13]===1 && (<p>Forbidden Letters: {forbiddenLetters.join(', ')}</p>)} 
           <Box
             component="img"
             src="https://neal.fun/password-game/title.svg"
