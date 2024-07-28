@@ -20,8 +20,8 @@ function isPrime(n) {
   return true;
 }
 
-function rule1(text) {
-  return text.length > 5;
+function rule1(text,X) {
+  return text.length >= X;
 }
 
 function rule2(text) {
@@ -118,9 +118,9 @@ function rule14(text, X, Y) {
   text = text.replace('🥚', '🐔');
   setInterval(() => {
     const countWorms = (text.match(/🐛/g) || []).length;
-    if (countWorms < Y) {
-      process.exit(1);
-    }
+    // if (countWorms < Y) {
+    //   process.exit(1);
+    // }
   }, X);
   return true;
 }
@@ -148,7 +148,7 @@ function rule18(text) {
 }
 
 function rule19(text) {
-  return isPrime(text.length);
+  return isPrime(text.length-(text.split('🔥').length - 1)- (text.split('🥚').length - 1)-(text.split('🐛').length - 1)-(text.split('🐔').length - 1));
 }
 
 function rule20(text, currentTime) {
