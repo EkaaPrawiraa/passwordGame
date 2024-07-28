@@ -53,6 +53,9 @@ function rule7(text) {
 
 
 function rule8(text, countries) {
+  if (countries.length == 0){
+    return false;
+  }
   return new RegExp(`(${countries.join('|')})`, 'i').test(text);
 }
 

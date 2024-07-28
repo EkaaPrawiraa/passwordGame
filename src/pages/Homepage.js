@@ -6,8 +6,7 @@ import Rule from '../component/RuleUI';
 import Typography from '@mui/material/Typography';
 import GameModeSelector from '../component/GameModeUI';
 import axios from 'axios';
-import { Buffer } from 'buffer';
-
+import ForbiddenLetterUI from '../component/forbiddenLetterUI';
 
 export default function TextBox() {
     const [searchTerm, setSearchTerm] = useState('');
@@ -30,10 +29,13 @@ export default function TextBox() {
     
     const [countries, setCountries] = useState([]);
     const [captchas, setCaptchas] = useState([]);
-    const [captcha, setCaptcha] = useState('');
-    
+    const [captchaShown, setCaptchasShown] = useState();
     const [captchasName,setCaptchasName]= useState([]);
+    const [captchaNameShown, setCaptchaNameShown] = useState();
     const [countryName,setCountryName]=useState([]);
+    const [countryShown,setCountryShown]=useState([]);
+    const [countryNameShown,setCountryNameShown]=useState([]);
+
     const [fireActive, setFireActive] = useState(false);
     const [addsEgg,setAddsEgg]=useState(true);
     const wormsIntervalRef = useRef(null);
@@ -49,14 +51,19 @@ export default function TextBox() {
     const [romanMul,setRomanMul]=useState(10);
     const [totalWorm,setTotalWorm]=useState(1);
     const [percentageDigits,setPercentageDigit]=useState(10);
-    const forbiddenLetters = [''];
+    const [forbiddenLetters, setForbiddenLetters] = useState([]);
+    const [forbidSum,setForbidSum]=useState(1);
+    const handleSetForbiddenLetters = (letters) => {
+      setForbiddenLetters(letters);
+    };
+  
 
 
     useEffect(() => {
         const levelSettings = {
-            easy: { wordLength: 5, timeInterval: 5000, sumDigit: 10, flags: 5, romanMul: 10, totalWorm: 1, percentageDigit: 10 },
-            medium: { wordLength: 10, timeInterval: 4000, sumDigit: 15, flags: 4, romanMul: 25, totalWorm: 2, percentageDigit: 20 },
-            hard: { wordLength: 15, timeInterval: 2000, sumDigit: 20, flags: 2, romanMul: 100, totalWorm: 3, percentageDigit: 40 }
+            easy: { wordLength: 5, timeInterval: 5000, sumDigit: 10, flags: 5, romanMul: 10, totalWorm: 1, percentageDigit: 10,forbidSum:1 },
+            medium: { wordLength: 10, timeInterval: 4000, sumDigit: 20, flags: 4, romanMul: 25, totalWorm: 2, percentageDigit: 20, forbidSum : 2 },
+            hard: { wordLength: 15, timeInterval: 2000, sumDigit: 35, flags: 2, romanMul: 100, totalWorm: 3, percentageDigit: 40,forbidSum : 3}
         };
         const settings = levelSettings[gameLevel];
         if (settings) {
@@ -67,6 +74,7 @@ export default function TextBox() {
             setRomanMul(settings.romanMul);
             setTotalWorm(settings.totalWorm);
             setPercentageDigit(settings.percentageDigit);
+            setForbidSum(settings.forbidSum);
         }
     }, [gameLevel]);
     
@@ -86,6 +94,7 @@ export default function TextBox() {
     
     const checkRules = (words) => {
     const newRulesComponents = [];
+    const anewRulesComponents = [];
     let allPassed = true;
     
     if (true) {
@@ -94,100 +103,100 @@ export default function TextBox() {
             newRulesComponents.unshift(<Rule index={1} text={`Your password must be at least ${wordLength} characters.`} passed={true}  />);
         } else {
             
-            newRulesComponents.unshift(<Rule index={1} text={`Your password must be at least ${wordLength} characters.`} passed={false} />);
+            anewRulesComponents.unshift(<Rule index={1} text={`Your password must be at least ${wordLength} characters.`} passed={false} />);
             allPassed = false;
         }
     }
 
-    if (rulesChecker[0] == 1) {
+    if (rulesChecker[0] === 1) {
         if (passwordRules.rule2(words)) {
              
             rulesChecker[1] = 1;
             newRulesComponents.unshift(<Rule index={2} text="Your password must include a number." passed={true} />);
         } else {
              
-            newRulesComponents.unshift(<Rule index={2} text="Your password must include a number." passed={false} />);
+            anewRulesComponents.unshift(<Rule index={2} text="Your password must include a number." passed={false} />);
             allPassed = false;
         }
     }
 
-    if (rulesChecker[1] == 1) {
+    if (rulesChecker[1] === 1) {
         if (passwordRules.rule3(words)) {
           
             rulesChecker[2] = 1;
             newRulesComponents.unshift(<Rule index={3} text="Your password must include an uppercase letter." passed={true} />);
         } else {
             
-            newRulesComponents.unshift(<Rule index={3} text="Your password must include an uppercase letter." passed={false} />);
+            anewRulesComponents.unshift(<Rule index={3} text="Your password must include an uppercase letter." passed={false} />);
             allPassed = false;
         }
     }
 
-    if (rulesChecker[2] == 1) {
+    if (rulesChecker[2] === 1) {
         if (passwordRules.rule4(words)) {
         
             rulesChecker[3] = 1;
             newRulesComponents.unshift(<Rule index={4} text="Your password must include a non-alphanumeric character." passed={true} />);
         } else {
-            newRulesComponents.unshift(<Rule index={4} text="Your password must include a non-alphanumeric character." passed={false} />);
+            anewRulesComponents.unshift(<Rule index={4} text="Your password must include a non-alphanumeric character." passed={false} />);
             allPassed = false;
         }
     }
 
-    if (rulesChecker[3] == 1) {
+    if (rulesChecker[3] === 1) {
         if (passwordRules.rule5(words, sumDigit)) {
            
             rulesChecker[4] = 1;
             newRulesComponents.unshift(<Rule index={5} text={`Sum of digits must equal ${sumDigit}`} passed={true} />);
         } else {
              
-            newRulesComponents.unshift(<Rule index={5} text={`Sum of digits must equal ${sumDigit}`} passed={false} />);
+            anewRulesComponents.unshift(<Rule index={5} text={`Sum of digits must equal ${sumDigit}`} passed={false} />);
             allPassed = false;
         }
     }
 
-    if (rulesChecker[4] == 1) {
+    if (rulesChecker[4] === 1) {
         if (passwordRules.rule6(words)) {
             
             rulesChecker[5] = 1;
             newRulesComponents.unshift(<Rule index={6} text="Your password must include a month name." passed={true} />);
         } else {
              
-            newRulesComponents.unshift(<Rule index={6} text="Your password must include a month name." passed={false} />);
+            anewRulesComponents.unshift(<Rule index={6} text="Your password must include a month name." passed={false} />);
             allPassed = false;
         }
     }
 
-    if (rulesChecker[5] == 1) {
+    if (rulesChecker[5] === 1) {
         if (passwordRules.rule7(words)) {
             
             rulesChecker[6] = 1;
             newRulesComponents.unshift(<Rule index={7} text="Your password must include a Roman numeral." passed={true} />);
         } else {
         
-            newRulesComponents.unshift(<Rule index={7} text="Your password must include a Roman numeral." passed={false} />);
+            anewRulesComponents.unshift(<Rule index={7} text="Your password must include a Roman numeral." passed={false} />);
             allPassed = false;
         }
     }
 
-    if (rulesChecker[6] == 1) {
-        if (passwordRules.rule8(words, countryName)) {
+    if (rulesChecker[6] === 1) {
+        if (passwordRules.rule8(words, countryNameShown)) {
             rulesChecker[7] = 1;
-            newRulesComponents.unshift(<Rule index={8} text="Your password must include a country name." passed={true} images={countries} />);
+            newRulesComponents.unshift(<Rule index={8} text="Your password must include a country name." passed={true} images={countryShown} />);
         } else {
              
-            newRulesComponents.unshift(<Rule index={8} text="Your password must include a country name." passed={false} images={countries}/>);
+            anewRulesComponents.unshift(<Rule index={8} text="Your password must include a country name." passed={false} images={countryShown}/>);
             allPassed = false;
         }
     }
 
-    if (rulesChecker[7] == 1) {
+    if (rulesChecker[7] === 1) {
         if (passwordRules.rule9(words, romanMul)) {
             rulesChecker[8] = 1;
             newRulesComponents.unshift(<Rule index={9} text={`Product of Roman numerals must equal ${romanMul}`} passed={true} />);
         } else {
            
-            newRulesComponents.unshift(<Rule index={9} text={`Product of Roman numerals must equal ${romanMul}`} passed={false} />);
+            anewRulesComponents.unshift(<Rule index={9} text={`Product of Roman numerals must equal ${romanMul}`} passed={false} />);
             allPassed = false;
         }
     }
@@ -210,7 +219,7 @@ export default function TextBox() {
           setFireActive(false);
         }
         if (fireActive) {
-          newRulesComponents.unshift(<Rule index={10} text={`Oh no! Your password is on fire 🔥. Quick, put it out!`} passed={false} />);
+          anewRulesComponents.unshift(<Rule index={10} text={`Oh no! Your password is on fire 🔥. Quick, put it out!`} passed={false} />);
         } 
         if (!fireActive && !searchTerm.includes('🔥')){
           newRulesComponents.unshift(<Rule index={10} text={`Oh no! Your password is on fire 🔥. Quick, put it out!`} passed={true} />);
@@ -221,7 +230,7 @@ export default function TextBox() {
         
     }
 
-    if (rulesChecker[9] == 1) {
+    if (rulesChecker[9] === 1) {
         if (addsEgg){
             setSearchTerm(words + '🥚')
             setAddsEgg(false);
@@ -234,30 +243,30 @@ export default function TextBox() {
         //allpased
     }
 
-    if (rulesChecker[10] == 1) {
-        console.log(captchas[0].filename);
-        if (passwordRules.rule12(words, captchasName[0])) {
+    if (rulesChecker[10] === 1) {
+        
+        if (passwordRules.rule12(words, captchaNameShown)) {
             rulesChecker[11] = 1;
-            newRulesComponents.unshift(<Rule index={12} text="Your password must include this CAPTCHA." passed={true} images={captchas}/>);
+            newRulesComponents.unshift(<Rule index={12} text="Your password must include this CAPTCHA." passed={true} images={[captchaShown]}/>);
         } else {
             
-            newRulesComponents.unshift(<Rule index={12} text="Your password must include this CAPTCHA." passed={false} images={captchas} />);
+            anewRulesComponents.unshift(<Rule index={12} text="Your password must include this CAPTCHA." passed={false} images={[captchaShown]} />);
             allPassed = false;
         }
     }
 
-    if (rulesChecker[11] == 1) {
+    if (rulesChecker[11] === 1) {
         if (passwordRules.rule13(words)) {
             rulesChecker[12] = 1;
             newRulesComponents.unshift(<Rule index={13} text="Your password must include a leap year." passed={true} />);
         } else {
              
-            newRulesComponents.unshift(<Rule index={13} text="Your password must include a leap year." passed={false} />);
+            anewRulesComponents.unshift(<Rule index={13} text="Your password must include a leap year." passed={false} />);
             allPassed = false;
         }
     }
 
-    if (rulesChecker[12] == 1) {
+    if (rulesChecker[12] === 1) {
         if (!searchTerm.includes('🐔') && searchTerm.includes('🥚')) {
             let newstr = searchTerm.replace('🥚','🐔');
             setSearchTerm(newstr);
@@ -271,83 +280,89 @@ export default function TextBox() {
         
     }
 
-    if (rulesChecker[13] == 1) {
-        
-        if (passwordRules.rule15(words, forbiddenLetters)) {
+    if (rulesChecker[13] === 1) {
+        if (passwordRules.rule15(words, forbiddenLetters) && forbiddenLetters.length === forbidSum) {
             rulesChecker[14] = 1;
-            newRulesComponents.unshift(<Rule index={15} text="Your password must not contain forbidden letters." passed={true} />);
-        } else {       
-            newRulesComponents.unshift(<Rule index={15} text="Your password must not contain forbidden letters." passed={false} />);
+            newRulesComponents.unshift(<Rule index={15} text={`Your password must not contain forbidden letters. Choose ${forbidSum} letters.`} passed={true} />);
+        } else {
+            newRulesComponents.unshift(<Rule index={15} text={`Your password must not contain forbidden letters. Choose ${forbidSum} letters.`} passed={false} />);
             allPassed = false;
         }
     }
+    
 
-    if (rulesChecker[14] == 1) {
+    if (rulesChecker[14] === 1) {
         if (passwordRules.rule16(words)) {
            
             rulesChecker[15] = 1;
             newRulesComponents.unshift(<Rule index={16} text="Your password must contain one of the following words: I want IRK | I need IRK | I love IRK." passed={true} />);
         } else {
            
-            newRulesComponents.unshift(<Rule index={16} text="Your password must contain one of the following words: I want IRK | I need IRK | I love IRK" passed={false} />);
+            anewRulesComponents.unshift(<Rule index={16} text="Your password must contain one of the following words: I want IRK | I need IRK | I love IRK" passed={false} />);
             allPassed = false;
         }
     }
 
-    if (rulesChecker[15] == 1) {
+    if (rulesChecker[15] === 1) {
         if (passwordRules.rule17(words, percentageDigits)) {
 
             rulesChecker[16] = 1;
             newRulesComponents.unshift(<Rule index={17} text={`Percentage of digits must be at least ${percentageDigits}%`} passed={true} />);
         } else {
            
-            newRulesComponents.unshift(<Rule index={17} text={`Percentage of digits must be at least ${percentageDigits}%`} passed={false} />);
+            anewRulesComponents.unshift(<Rule index={17} text={`Percentage of digits must be at least ${percentageDigits}%`} passed={false} />);
             allPassed = false;
         }
     }
 
-    if (rulesChecker[16] == 1) {
+    if (rulesChecker[16] === 1) {
         if (passwordRules.rule18(words)) {
            
             rulesChecker[17] = 1;
             newRulesComponents.unshift(<Rule index={18} text="Your password must include the length of the text." passed={true} />);
         } else {
             
-            newRulesComponents.unshift(<Rule index={18} text="Your password must include the length of the text." passed={false} />);
+            anewRulesComponents.unshift(<Rule index={18} text="Your password must include the length of the text." passed={false} />);
             allPassed = false;
         }
     }
 
-    if (rulesChecker[17] == 1) {
+    if (rulesChecker[17] === 1) {
         if (passwordRules.rule19(words)) {
        
             rulesChecker[18] = 1;
             newRulesComponents.unshift(<Rule index={19} text="Your password's length must be a prime number." passed={true} />);
         } else {
-            newRulesComponents.unshift(<Rule index={19} text="Your password's length must be a prime number." passed={false} />);
+            anewRulesComponents.unshift(<Rule index={19} text="Your password's length must be a prime number." passed={false} />);
             allPassed = false;
         }
     }
 
-    if (rulesChecker[18] == 1) {
+    if (rulesChecker[18] === 1) {
         const currentTime = new Date();
         if (passwordRules.rule20(words, currentTime)) {
             rulesChecker[19] = 1;
-            newRulesComponents.unshift(<Rule index={20} text="Your password must include the current time." passed={true} />);
+            newRulesComponents.unshift(<Rule index={20} text="Your password must include the current time (HH:MM). " passed={true} />);
         } else {
-            newRulesComponents.unshift(<Rule index={20} text="Your password must include the current time." passed={false} />);
+            anewRulesComponents.unshift(<Rule index={20} text="Your password must include the current time (HH:MM). " passed={false} />);
             allPassed = false;
         }
     }
-    if (rulesChecker[19]==1 && allPassed){
+    if (rulesChecker[19]===1 && allPassed){
         console.log("win");
+        setGameWinning(true);
     }
 
-    setRulesComponents(newRulesComponents);
+    setRulesComponents(anewRulesComponents.concat(newRulesComponents));
     setAllPassed(allPassed);
 };
 
-    
+useEffect(()=>{
+    if (gameWinning){
+        console.log('win');
+    }
+
+},[gameWinning]);
 
 
 
@@ -409,7 +424,7 @@ useEffect(() => {
 
     // algo gameover
     useEffect(()=> {
-        if (rulesChecker[10]==1 && !searchTerm.includes('🥚') && !rulesChecker[13]==1 ){
+        if (rulesChecker[10]===1 && !searchTerm.includes('🥚') && !rulesChecker[13]===1 ){
             setGameOver(true);
             // console.log(gameOver);
         }
@@ -419,7 +434,8 @@ useEffect(() => {
 
     useEffect(() => {
         checkRules(searchTerm);
-        console.log(captchas);
+        // console.log(countryName);
+        console.log(forbiddenLetters);
     }, [searchTerm,countries,captchas]);
 
     useEffect(() => {
@@ -458,9 +474,6 @@ useEffect(() => {
                     };
                 });
                 setCaptchas(captchasWithImages);
-                if (captchasWithImages.length > 0) {
-                    setCaptcha(captchasWithImages[0]);
-                }
             } catch (error) {
                 console.error('Error fetching captchas:', error);
             }
@@ -475,6 +488,26 @@ useEffect(() => {
         setCountryName(transformFilenames(countries));
         setCaptchasName(transformFilenames(captchas));
       }, [countries, captchas]);
+
+    useEffect(()=>{
+        console.log('sini');
+        let x = Math.floor(Math.random() * 10);
+        if (x + flags > 9)
+        {   
+            x=Math.floor(Math.random() * 5);
+        }
+        let newCountry = countries.slice(x,x+flags);
+        let newCountryName= countryName.slice(x,x+flags);
+        setCountryShown(newCountry);
+        setCountryNameShown(newCountryName);
+
+        x = (Math.floor(Math.random() * 6))
+        setCaptchaNameShown(captchasName.at(x));
+        setCaptchasShown(captchas.at(x));
+
+    },[gameLevel,countries,countryName,flags,captchas]);
+
+    
     
     
    
@@ -528,69 +561,71 @@ useEffect(() => {
       
 
 
-      return (
-        
+    return (
         <Box
-            component="form"
-            sx={{
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                paddingTop: '45px',
-                height: '100vh',
-                backgroundColor: '#fdf4e3', // Ganti warna background di sini
-                '& > :not(style)': { m: 1, width: '50%%' }, // Mengatur lebar TextField dan Rule components
-            }}
-            noValidate
-            autoComplete="off"
-            
+          component="form"
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            paddingTop: '45px',
+            height: '100vh',
+            backgroundColor: '#fdf4e3',
+            '& > :not(style)': { m: 1, width: '50%' },
+          }}
+          noValidate
+          autoComplete="off"
         >
-            <GameModeSelector  gameLevel={gameLevel} onLevelChange={setGameLevel} />
-            <Box
-                component="img"
-                src="https://neal.fun/password-game/title.svg"
-                alt="Title"
-                sx={{
-                    width: '100%',
-                    maxWidth: '500px',
-                    marginBottom: '20px',
-                    paddingBottom:'60px',
-                    paddingTop :'60px',
-                }}
-            />
-            
-            <Typography variant="h6" gutterBottom sx={{ textAlign: 'left', marginTop: '20px' }}>
-            Please choose a password
-           </Typography>
-            <Box
-                sx={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    width: '33%' // Mengatur lebar Box yang mengandung TextField dan Typography
-                }}
-            >
-                <TextField 
-                    id="standard-basic" 
-                    variant="outlined" 
-                    value={searchTerm} 
-                    onChange={handleSearch}
-                    sx={{
-                        borderRadius: '15px',
-                        backgroundColor: '#fff',
-                        '& .MuiOutlinedInput-root': {
-                            '& fieldset': {
-                                borderRadius: '15px',
-                                borderColor: 'black',
-                            },
-                        },
-                        width: '100%' // Mengatur lebar TextField
-                    }} 
-                />
-                <Typography variant="body1" sx={{ paddingLeft :1, }}>
-                    {(searchTerm.length-(searchTerm.split('🔥').length - 1)- (searchTerm.split('🥚').length - 1)-(searchTerm.split('🐛').length - 1)-(searchTerm.split('🐔').length - 1))} 
-                </Typography>
-            </Box>
-            {rulesComponents}
+          <Box sx={{ display: 'flex', width: '100%', justifyContent: 'center', alignItems: 'center',padding:'10px' }}>
+            <GameModeSelector gameLevel={gameLevel} onLevelChange={setGameLevel}  />
+            <ForbiddenLetterUI setForbiddenLetters={handleSetForbiddenLetters} />
         </Box>
-    );
-}
+        <p>Forbidden Letters: {forbiddenLetters.join(', ')}</p>
+          <Box
+            component="img"
+            src="https://neal.fun/password-game/title.svg"
+            alt="Title"
+            sx={{
+              width: '100%',
+              maxWidth: '500px',
+              marginBottom: '20px',
+              paddingBottom: '60px',
+              paddingTop: '60px',
+            }}
+          />
+          <Typography variant="h6" gutterBottom sx={{ textAlign: 'left', marginTop: '20px' }}>
+            Please choose a password
+          </Typography>
+          <Box
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              width: '33%',
+            }}
+          >
+            <TextField 
+              id="standard-basic" 
+              variant="outlined" 
+              value={searchTerm} 
+              onChange={handleSearch}
+              sx={{
+                borderRadius: '15px',
+                backgroundColor: '#fff',
+                '& .MuiOutlinedInput-root': {
+                  '& fieldset': {
+                    borderRadius: '15px',
+                    borderColor: 'black',
+                  },
+                },
+                width: '100%', // Mengatur lebar TextField
+              }} 
+            />
+            <Typography variant="body1" sx={{ paddingLeft: 1 }}>
+              {(searchTerm.length - (searchTerm.split('🔥').length - 1) - (searchTerm.split('🥚').length - 1) - (searchTerm.split('🐛').length - 1) - (searchTerm.split('🐔').length - 1))}
+            </Typography>
+          </Box>
+          {rulesComponents}
+        </Box>
+      );
+    };
+    
