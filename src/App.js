@@ -1,14 +1,18 @@
-import logo from './logo.svg';
-import './App.css';
+// src/App.js
+import React from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import TextBox from './pages/Homepage';
-import GameModeSelector from './component/GameModeUI';
-
-function App() {
-  return (
-    <div className="App">
-      <TextBox />
-    </div>
-  );
+import GameResultPage from './pages/GameResultPage';
+import './App.css';
+export default function App() {
+    return (
+      <div className="App">
+        <Router>
+            <Routes>
+                <Route path="/" element={<TextBox />} />
+                <Route path="/result" element={<GameResultPage />} />
+            </Routes>
+        </Router>
+        </div>
+    );
 }
-
-export default App;

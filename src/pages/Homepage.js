@@ -7,16 +7,10 @@ import Typography from '@mui/material/Typography';
 import GameModeSelector from '../component/GameModeUI';
 import axios from 'axios';
 import ForbiddenLetterUI from '../component/forbiddenLetterUI';
+import { useNavigate } from 'react-router-dom';
 
 export default function TextBox() {
     const [searchTerm, setSearchTerm] = useState('');
-    // const [gameState, setGameState] = useState({
-    //     gameOver: false,
-    //     gameWinning: false,
-    //     allPassed: true,
-    //     firstTime: true,
-    //     score: 0,
-    // });
     const [gameOver, setGameOver] = useState(false);
     const [gameWinning,setGameWinning]= useState(false);
     const [rulesChecker, setRulesChecker] = useState(Array(20).fill(0));
@@ -53,15 +47,24 @@ export default function TextBox() {
     const [percentageDigits,setPercentageDigit]=useState(10);
     const [forbiddenLetters, setForbiddenLetters] = useState([]);
     const [forbidSum,setForbidSum]=useState(1);
+    const navigate = useNavigate();
+
+
     const handleSetForbiddenLetters = (letters) => {
       setForbiddenLetters(letters);
     };
   
 
+    useEffect(() => {
+        if (gameWinning || gameOver) {
+            const resultMessage = gameWinning ? 'win' : 'game over';
+            navigate('/result', { state: { resultMessage, score: calculateScore(), searchTerm } });
+        }
+    }, [gameWinning, gameOver, navigate]);
 
     useEffect(() => {
         const levelSettings = {
-            easy: { wordLength: 5, timeInterval: 5000, sumDigit: 10, flags: 5, romanMul: 10, totalWorm: 1, percentageDigit: 10,forbidSum:1 },
+            easy: { wordLength: 5, timeInterval: 5000, sumDigit: 15, flags: 5, romanMul: 10, totalWorm: 1, percentageDigit: 10,forbidSum:1 },
             medium: { wordLength: 10, timeInterval: 4000, sumDigit: 20, flags: 4, romanMul: 25, totalWorm: 2, percentageDigit: 20, forbidSum : 2 },
             hard: { wordLength: 15, timeInterval: 2000, sumDigit: 35, flags: 2, romanMul: 100, totalWorm: 3, percentageDigit: 40,forbidSum : 3}
         };
@@ -182,10 +185,10 @@ export default function TextBox() {
     if (rulesChecker[6] === 1) {
         if (passwordRules.rule8(words, countryNameShown)) {
             rulesChecker[7] = 1;
-            newRulesComponents.unshift(<Rule index={8} text="Your password must include a country name." passed={true} images={countryShown} />);
+            newRulesComponents.unshift(<Rule index={8} text="Your password must include a country name." passed={true} images={countryShown} buttons={true} refreshImages={refreshImagesCountry} />);
         } else {
              
-            anewRulesComponents.unshift(<Rule index={8} text="Your password must include a country name." passed={false} images={countryShown}/>);
+            anewRulesComponents.unshift(<Rule index={8} text="Your password must include a country name." passed={false} images={countryShown} buttons={true} refreshImages={refreshImagesCountry}/>);
             allPassed = false;
         }
     }
@@ -247,10 +250,10 @@ export default function TextBox() {
         
         if (passwordRules.rule12(words, captchaNameShown)) {
             rulesChecker[11] = 1;
-            newRulesComponents.unshift(<Rule index={12} text="Your password must include this CAPTCHA." passed={true} images={[captchaShown]}/>);
+            newRulesComponents.unshift(<Rule index={12} text="Your password must include this CAPTCHA." passed={true} images={[captchaShown]} buttons={true} refreshImages={refreshImagesCaptchas}/>);
         } else {
             
-            anewRulesComponents.unshift(<Rule index={12} text="Your password must include this CAPTCHA." passed={false} images={[captchaShown]} />);
+            anewRulesComponents.unshift(<Rule index={12} text="Your password must include this CAPTCHA." passed={false} images={[captchaShown]} buttons={true} refreshImages={refreshImagesCaptchas}/>);
             allPassed = false;
         }
     }
@@ -357,12 +360,12 @@ export default function TextBox() {
     setAllPassed(allPassed);
 };
 
-useEffect(()=>{
-    if (gameWinning){
-        console.log('win');
-    }
+// useEffect(()=>{
+//     if (gameWinning){
+//         console.log('win');
+//     }
 
-},[gameWinning]);
+// },[gameWinning]);
 
 
 
@@ -412,7 +415,7 @@ useEffect(() => {
         }, timeInterval);
 
         return () => clearInterval(wormsIntervalRef.current);
-    } else {
+    } else if (rulesChecker[12]===1 && !searchTerm.includes('🐔')) {
         setGameOver(true);
     }
 }, [rulesChecker, searchTerm]);
@@ -508,8 +511,6 @@ useEffect(() => {
     },[gameLevel,countries,countryName,flags,captchas]);
 
     
-    
-    
    
     // const generateValidAnswer = (currentTerm) => {
     //     if (gameLevel=='easy'){
@@ -547,9 +548,25 @@ useEffect(() => {
             rulesChecker[17] * 0.05 +
             rulesChecker[18] * 0.05 +
             rulesChecker[19] * 0.05;
-        return totalScore;
+        return totalScore * 100;
     }
-    
+    const refreshImagesCaptchas = () => {
+        let x = (Math.floor(Math.random() * 6))
+        setCaptchaNameShown(captchasName.at(x));
+        setCaptchasShown(captchas.at(x));
+      };
+    const refreshImagesCountry = () => {
+        let x = Math.floor(Math.random() * 10);
+        if (x + flags > 9)
+        {   
+            x=Math.floor(Math.random() * 5);
+        }
+        let newCountry = countries.slice(x,x+flags);
+        let newCountryName= countryName.slice(x,x+flags);
+        setCountryShown(newCountry);
+        setCountryNameShown(newCountryName);
+      };
+
     // const updateScore = () => {
     //     const currentScore = calculateScore();
     //     setScore(currentScore);
@@ -576,11 +593,12 @@ useEffect(() => {
           noValidate
           autoComplete="off"
         >
+
           <Box sx={{ display: 'flex', width: '100%', justifyContent: 'center', alignItems: 'center',padding:'10px' }}>
             <GameModeSelector gameLevel={gameLevel} onLevelChange={setGameLevel}  />
-            <ForbiddenLetterUI setForbiddenLetters={handleSetForbiddenLetters} />
+            {rulesChecker[13] === 1 && (<ForbiddenLetterUI setForbiddenLetters={handleSetForbiddenLetters} />  )}
         </Box>
-        <p>Forbidden Letters: {forbiddenLetters.join(', ')}</p>
+           {rulesChecker[13]==1 && (<p>Forbidden Letters: {forbiddenLetters.join(', ')}</p>)} 
           <Box
             component="img"
             src="https://neal.fun/password-game/title.svg"

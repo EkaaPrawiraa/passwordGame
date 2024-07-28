@@ -1,6 +1,8 @@
 import React from 'react';
+import RefreshIcon from '@mui/icons-material/Refresh';
+import Button from '@mui/material/Button';
 
-const Rule = ({ index, text, passed, images }) => {
+const Rule = ({ index, text, passed, images,buttons, refreshImages }) => {
     return (
         <div style={{
             border: `1px solid ${passed ? 'green' : 'red'}`,
@@ -28,7 +30,6 @@ const Rule = ({ index, text, passed, images }) => {
                     paddingTop : 2,
                 }}>Rule {index}</strong>
             </div>
-            {/* Render gambar di sini jika ada */}
             
             <div style={{
                 backgroundColor: `${passed ? '#e6ffed' : '#ffe6e6'}`,
@@ -45,20 +46,45 @@ const Rule = ({ index, text, passed, images }) => {
                     padding: 10,
                     marginBottom : 10
                 }}>{text}</p>
+                
                 {images && images.length > 0 && (
-                <div style={{ marginBottom: '5px' }}>
-                    {images.map((image, idx) => (
-                        <img key={idx} src={image.imageSrc} alt={`Rule ${index} Image ${idx}`} style={{
-                            width: `${100 / images.length}%`,
-                            maxWidth : '200px',
-                            borderRadius: '8px',
-                            border: '2px solid #FFF',
-                            marginBottom: '5px',
-                            padding : '10 px'
-                        }} />
-                    ))}
-                </div>
-            )}
+                    <div style={{ marginBottom: '5px' }}>
+                        {images.map((image, idx) => (
+                            <img key={idx} src={image.imageSrc} alt={`Rule ${index} Image ${idx}`} style={{
+                                width: `${100 / images.length}%`,
+                                maxWidth: '200px',
+                                borderRadius: '8px',
+                                border: '2px solid #FFF',
+                                marginBottom: '5px',
+                                padding: '10px'
+                            }} />
+                        ))}
+                    </div>
+                )}
+                
+                {buttons && (
+    <Button
+        variant="contained"
+        onClick={refreshImages}
+        sx={{
+            marginTop: '10px',
+            backgroundColor: 'gray', 
+            color: '#fff',
+            borderRadius: '50%', 
+            minWidth: '40px', 
+            minHeight: '40px', 
+            padding: '0', 
+            '&:hover': {
+                backgroundColor: '#0056b3',
+            },
+        }}
+    >
+        <RefreshIcon sx={{ fontSize: '24px' }} /> 
+    </Button>
+)}
+
+
+                
             </div>
         </div>
     );
