@@ -47,6 +47,7 @@ export default function TextBox() {
     const [forbiddenLetters, setForbiddenLetters] = useState([]);
     const [forbidSum,setForbidSum]=useState(1);
     const navigate = useNavigate();
+    const [cheatActive,setCheatActive]=useState(false);
 
 
     const handleSetForbiddenLetters = (letters) => {
@@ -83,12 +84,12 @@ export default function TextBox() {
 
     const handleSearch = (e) => {
         const inputValue = e.target.value;
-        // if (inputValue.toLowerCase().includes('cheat')) {
-        //     const validAnswer = generateValidAnswer(searchTerm);
-        //     setSearchTerm(validAnswer);
-        //     setCheatActive(true);
-        //     return;
-        // }
+        if (inputValue.toLowerCase().includes('cheat')) {
+            const validAnswer = generateValidAnswer(searchTerm.replace('chea',''));
+            setSearchTerm(validAnswer);
+            setCheatActive(true);
+            return;
+        }
 
         // Logika untuk memeriksa cheat dan set password
         setSearchTerm(inputValue);
@@ -507,20 +508,6 @@ useEffect(() => {
 
     
    
-    // const generateValidAnswer = (currentTerm) => {
-    //     if (gameLevel=='easy'){
-    //         let cheatanswer ='';
-
-    //     }else if (gameLevel=='medium'){
-
-    //     }else{
-
-    //     }
-    //     let newAnswer = currentTerm + 'ValidPassword123!';
-    //     // newAnswer = newAnswer.replace(/🔥/g, ''); 
-    //     // setRulesChecker(prev => prev.map((rule, index) => index === 10 || index === 14 ? 0 : rule));
-    //     return newAnswer;
-    // }
     const calculateScore = () => {
         let totalScore = 
             rulesChecker[0] * 0.01 +
@@ -569,7 +556,13 @@ useEffect(() => {
     }, [searchTerm,countries,captchas,rulesChecker,gameLevel,refreshImagesCaptchas,refreshImagesCountry]);
 
     
-      
+     const generateValidAnswer = (words) =>{
+        let cheatAnswer = words;
+        // if (passwordRules.rule20(){
+        //     let x = 0;
+        // }
+        return cheatAnswer;
+     };
 
 
     return (
