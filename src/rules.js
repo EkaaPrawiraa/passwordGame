@@ -53,9 +53,9 @@ function rule7(text) {
 
 
 function rule8(text, countries) {
-  if (countries.length === 0){
-    return false;
-  }
+  // if (countries.length === 0){
+  //   return false;
+  // }
   return new RegExp(`(${countries.join('|')})`, 'i').test(text);
 }
 
@@ -152,11 +152,7 @@ function rule20(text, currentTime) {
   const currentTimeString = moment(currentTime).format('HH:mm');
   return text.includes(currentTimeString);
 }
-const cheatPassword = () => { //belum beres
-  let words = "indonesiajuneX19000"
 
-  return words;
-}
 
 const passwordRules = {
   rule1,
@@ -182,6 +178,5 @@ const passwordRules = {
   romanToInt,
   isLeapYear,
   isPrime,
-  cheatPassword,
 };
 export default passwordRules;

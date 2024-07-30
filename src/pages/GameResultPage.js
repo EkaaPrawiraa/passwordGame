@@ -9,7 +9,7 @@ import victory from './victory.png';
 export default function GameResultPage() {
     const location = useLocation();
     const navigate = useNavigate();
-    const { resultMessage, score, searchTerm } = location.state || {};
+    const { resultMessage, highest,score, searchTerm } = location.state || {};
 
     const handleBackToGame = () => {
         navigate('/');
@@ -39,6 +39,7 @@ export default function GameResultPage() {
            
             <img src={getResultImage()} alt={resultMessage && resultMessage.toLowerCase().includes('win') ? 'Victory' : 'Defeat'} style={{ width: '40%', marginBottom: '20px' }} />
 
+            <Typography variant="h4" gutterBottom>Highest Score: {highest}</Typography>
             <Typography variant="h4" gutterBottom>Score: {score}</Typography>
             <Typography variant="h5" gutterBottom>Your Password: </Typography>
             <Typography variant="h5" gutterBottom>{searchTerm}</Typography>

@@ -6,16 +6,20 @@ const cors = require('cors');
 const app = express();
 const port = 5001;
 
-
 app.use(cors());
-
 
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
-mongoose.connect("mongodb+srv://mnugrahaekaprawira:ep120623@passwordgame.9j0ecqs.mongodb.net/?retryWrites=true&w=majority&appName=passwordGame")
-    .then(() => console.log('monggo ka MongoDB'))
-    .catch(err => console.error('tebisaeun ka MongoDB', err));
+const mongoUri = "mongodb+srv://ekaPrawira:Ep12345678@passwordgame.9j0ecqs.mongodb.net/?retryWrites=true&w=majority&appName=passwordGame";
+
+mongoose.connect(mongoUri)
+    .then(() => console.log('Connected to MongoDB'))
+    .catch(err => {
+        console.error('Failed to connect to MongoDB:', err.message);
+        console.error('Error code:', err.code);
+        console.error('Error stack:', err.stack);
+    });
 
 const CaptchaSchema = new mongoose.Schema({
     data: Buffer,
@@ -34,17 +38,18 @@ const CountrySchema = new mongoose.Schema({
 const Country = mongoose.model('Country', CountrySchema);
 
 app.get('/', (req, res) => {
-    res.send('Bisa nih');
+    res.send('Server is running');
 });
 
 app.post('/captchas', upload.single('image'), async (req, res) => {
     try {
-        const img = new Captcha();
-        img.data = req.file.buffer;
-        img.contentType = req.file.mimetype;
-        img.filename = req.file.originalname;
+        const img = new Captcha({
+            data: req.file.buffer,
+            contentType: req.file.mimetype,
+            filename: req.file.originalname,
+        });
         await img.save();
-        res.send('Gambar berhasil diupload!');
+        res.send('Image uploaded successfully!');
     } catch (err) {
         res.status(500).send(err);
     }
@@ -52,12 +57,13 @@ app.post('/captchas', upload.single('image'), async (req, res) => {
 
 app.post('/countries', upload.single('image'), async (req, res) => {
     try {
-        const img = new Country();
-        img.data = req.file.buffer;
-        img.contentType = req.file.mimetype;
-        img.filename = req.file.originalname;
+        const img = new Country({
+            data: req.file.buffer,
+            contentType: req.file.mimetype,
+            filename: req.file.originalname,
+        });
         await img.save();
-        res.send('Gambar berhasil diupload!');
+        res.send('Image uploaded successfully!');
     } catch (err) {
         res.status(500).send(err);
     }

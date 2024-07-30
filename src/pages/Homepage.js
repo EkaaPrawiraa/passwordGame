@@ -8,6 +8,7 @@ import GameModeSelector from '../component/GameModeUI';
 import axios from 'axios';
 import ForbiddenLetterUI from '../component/forbiddenLetterUI';
 import { useNavigate } from 'react-router-dom';
+import moment from 'moment';
 
 export default function TextBox() {
     const [searchTerm, setSearchTerm] = useState('');
@@ -48,19 +49,37 @@ export default function TextBox() {
     const [forbidSum,setForbidSum]=useState(1);
     const navigate = useNavigate();
     const [cheatActive,setCheatActive]=useState(false);
+    const [highestScore,setHighestScore]=useState(0);
+    const [score,setScore]=useState(0);
 
 
     const handleSetForbiddenLetters = (letters) => {
       setForbiddenLetters(letters);
     };
   
+    const colorIndices = [1, 3, 5]; // Indeks
+    const color = "red"; 
+  
+    const formatSearchTerm = (term, indices, color) => {
+      return term.split('').map((char, index) => {
+        if (indices.includes(index)) {
+          return <span key={index} style={{ color }}>{char}</span>;
+        }
+        return char;
+      });
+    };
 
     useEffect(() => {
         if (gameWinning || gameOver) {
             const resultMessage = gameWinning ? 'win' : 'game over';
-            navigate('/result', { state: { resultMessage, score: calculateScore(), searchTerm } });
+            navigate('/result', { state: { resultMessage, highest : calculateScore(),score: score, searchTerm } });
         }
     }, [gameWinning, gameOver, navigate]);
+
+    // useEffect(() => {
+    //     if (gameLevel != 'easy')
+    //         window.location.reload();
+    // }, [gameLevel]);
 
     useEffect(() => {
         const levelSettings = {
@@ -85,7 +104,7 @@ export default function TextBox() {
     const handleSearch = (e) => {
         const inputValue = e.target.value;
         if (inputValue.toLowerCase().includes('cheat')) {
-            const validAnswer = generateValidAnswer(searchTerm.replace('chea',''));
+            const validAnswer = cheatActivate(searchTerm.replace('chea',''));
             setSearchTerm(validAnswer);
             setCheatActive(true);
             return;
@@ -96,15 +115,18 @@ export default function TextBox() {
     }
     
     const checkRules = (words) => {
+        // console.log("sono");
     const newRulesComponents = [];
     const anewRulesComponents = [];
     let allPassed = true;
+    let newScore=0;
     
     
     if (true) {
         if (passwordRules.rule1(words,wordLength)) {
             rulesChecker[0] = 1;
             newRulesComponents.unshift(<Rule index={1} text={`Your password must be at least ${wordLength} characters.`} passed={true}  />);
+            newScore +=1;
         } else {
             
             anewRulesComponents.unshift(<Rule index={1} text={`Your password must be at least ${wordLength} characters.`} passed={false} />);
@@ -114,7 +136,7 @@ export default function TextBox() {
 
     if (rulesChecker[0] === 1) {
         if (passwordRules.rule2(words)) {
-             
+            newScore+=1;
             rulesChecker[1] = 1;
             newRulesComponents.unshift(<Rule index={2} text="Your password must include a number." passed={true} />);
         } else {
@@ -126,7 +148,7 @@ export default function TextBox() {
 
     if (rulesChecker[1] === 1) {
         if (passwordRules.rule3(words)) {
-          
+            newScore+=1;
             rulesChecker[2] = 1;
             newRulesComponents.unshift(<Rule index={3} text="Your password must include an uppercase letter." passed={true} />);
         } else {
@@ -138,7 +160,7 @@ export default function TextBox() {
 
     if (rulesChecker[2] === 1) {
         if (passwordRules.rule4(words)) {
-        
+            newScore+=1;
             rulesChecker[3] = 1;
             newRulesComponents.unshift(<Rule index={4} text="Your password must include a non-alphanumeric character." passed={true} />);
         } else {
@@ -149,7 +171,7 @@ export default function TextBox() {
 
     if (rulesChecker[3] === 1) {
         if (passwordRules.rule5(words, sumDigit)) {
-           
+            newScore+=10;
             rulesChecker[4] = 1;
             newRulesComponents.unshift(<Rule index={5} text={`Sum of digits must equal ${sumDigit}`} passed={true} />);
         } else {
@@ -161,7 +183,7 @@ export default function TextBox() {
 
     if (rulesChecker[4] === 1) {
         if (passwordRules.rule6(words)) {
-            
+            newScore+=5;
             rulesChecker[5] = 1;
             newRulesComponents.unshift(<Rule index={6} text="Your password must include a month name." passed={true} />);
         } else {
@@ -173,7 +195,7 @@ export default function TextBox() {
 
     if (rulesChecker[5] === 1) {
         if (passwordRules.rule7(words)) {
-            
+            newScore+=5;
             rulesChecker[6] = 1;
             newRulesComponents.unshift(<Rule index={7} text="Your password must include a Roman numeral." passed={true} />);
         } else {
@@ -186,6 +208,7 @@ export default function TextBox() {
     if (rulesChecker[6] === 1) {
         if (passwordRules.rule8(words, countryNameShown)) {
             rulesChecker[7] = 1;
+            newScore+=5;
             newRulesComponents.unshift(<Rule index={8} text="Your password must include a country name." passed={true} images={countryShown} buttons={true} refreshImages={refreshImagesCountry} />);
         } else {
              
@@ -197,6 +220,7 @@ export default function TextBox() {
     if (rulesChecker[7] === 1) {
         if (passwordRules.rule9(words, romanMul)) {
             rulesChecker[8] = 1;
+            newScore+=5;
             newRulesComponents.unshift(<Rule index={9} text={`Product of Roman numerals must equal ${romanMul}`} passed={true} />);
         } else {
            
@@ -205,15 +229,15 @@ export default function TextBox() {
         }
     }
 
-    if (rulesChecker[8] === 1 && !fireActive && !searchTerm.includes('🔥')&& !firstTime ) {
-        let x = Math.floor(Math.random() * 26);
-        // console.log(x);
-        if (x === 7) {
+    if (rulesChecker[8] === 1 && !fireActive && !searchTerm.includes('🔥')&& !firstTime && !cheatActivate) {
+        let randomsnum = Math.floor(Math.random() * 26);
+        if (randomsnum === 7) {
             setSearchTerm(words.slice(0,-1)+'🔥');
         }
     }
     if (rulesChecker[8] === 1) {
-        if (firstTime){
+        if (firstTime && !cheatActivate){
+            
             setSearchTerm(words.slice(0,-1)+'🔥');
             setFirstTime(false);
         }
@@ -227,6 +251,7 @@ export default function TextBox() {
         } 
         if (!fireActive && !searchTerm.includes('🔥')){
           newRulesComponents.unshift(<Rule index={10} text={`Oh no! Your password is on fire 🔥. Quick, put it out!`} passed={true} />);
+          newScore+=5;
           if (!firstTime){
               rulesChecker[9] = 1;
           }
@@ -235,22 +260,24 @@ export default function TextBox() {
     }
 
     if (rulesChecker[9] === 1) {
-        if (addsEgg){
+        if (addsEgg && !cheatActivate){
             setSearchTerm(words + '🥚')
             setAddsEgg(false);
             newRulesComponents.unshift(<Rule index={11} text="🥚 This is my chicken Paul. He hasn’t hatched yet. Please put him in your password and keep him safe" passed={true} />);
             rulesChecker[10] = 1;
+            newScore+=5;
         }else{
             newRulesComponents.unshift(<Rule index={11} text="🥚 This is my chicken Paul. He hasn’t hatched yet. Please put him in your password and keep him safe" passed={true} />);
+            newScore+=5;
         }
         
         //allpased
     }
 
     if (rulesChecker[10] === 1) {
-        
         if (passwordRules.rule12(words, captchaNameShown)) {
             rulesChecker[11] = 1;
+            newScore+=5;
             newRulesComponents.unshift(<Rule index={12} text="Your password must include this CAPTCHA." passed={true} images={[captchaShown]} buttons={true} refreshImages={refreshImagesCaptchas}/>);
         } else {
             
@@ -262,6 +289,7 @@ export default function TextBox() {
     if (rulesChecker[11] === 1) {
         if (passwordRules.rule13(words)) {
             rulesChecker[12] = 1;
+            newScore+=10;
             newRulesComponents.unshift(<Rule index={13} text="Your password must include a leap year." passed={true} />);
         } else {
              
@@ -276,8 +304,9 @@ export default function TextBox() {
             setSearchTerm(newstr);
         }
         newRulesComponents.unshift(<Rule index={14} text={`🐔 Paul has hatched ! Please don’t forget to feed him. He eats ${totalWorm} 🐛 every ${timeInterval/1000} second`} passed={true} />);
-        if (words.includes('🐔')){
+        if (words.includes('🐔') || cheatActivate){
             rulesChecker[13] = 1;
+            newScore+=10;
         }else{
             allPassed=false;
         }
@@ -287,9 +316,10 @@ export default function TextBox() {
     if (rulesChecker[13] === 1) {
         if (passwordRules.rule15(words, forbiddenLetters) && forbiddenLetters.length === forbidSum) {
             rulesChecker[14] = 1;
+            newScore+=10;
             newRulesComponents.unshift(<Rule index={15} text={`Your password must not contain forbidden letters. Choose ${forbidSum} letters.`} passed={true} />);
         } else {
-            newRulesComponents.unshift(<Rule index={15} text={`Your password must not contain forbidden letters. Choose ${forbidSum} letters.`} passed={false} />);
+            anewRulesComponents.unshift(<Rule index={15} text={`Your password must not contain forbidden letters. Choose ${forbidSum} letters.`} passed={false} />);
             allPassed = false;
         }
     }
@@ -297,7 +327,7 @@ export default function TextBox() {
 
     if (rulesChecker[14] === 1) {
         if (passwordRules.rule16(words)) {
-           
+            newScore+=10;
             rulesChecker[15] = 1;
             newRulesComponents.unshift(<Rule index={16} text="Your password must contain one of the following words: I want IRK | I need IRK | I love IRK." passed={true} />);
         } else {
@@ -309,7 +339,7 @@ export default function TextBox() {
 
     if (rulesChecker[15] === 1) {
         if (passwordRules.rule17(words, percentageDigits)) {
-
+            newScore+=5;
             rulesChecker[16] = 1;
             newRulesComponents.unshift(<Rule index={17} text={`Percentage of digits must be at least ${percentageDigits}%`} passed={true} />);
         } else {
@@ -321,7 +351,7 @@ export default function TextBox() {
 
     if (rulesChecker[16] === 1) {
         if (passwordRules.rule18(words)) {
-           
+            newScore+=5;
             rulesChecker[17] = 1;
             newRulesComponents.unshift(<Rule index={18} text="Your password must include the length of the text." passed={true} />);
         } else {
@@ -333,7 +363,7 @@ export default function TextBox() {
 
     if (rulesChecker[17] === 1) {
         if (passwordRules.rule19(words)) {
-       
+            newScore+=5;
             rulesChecker[18] = 1;
             newRulesComponents.unshift(<Rule index={19} text="Your password's length must be a prime number." passed={true} />);
         } else {
@@ -346,6 +376,7 @@ export default function TextBox() {
         const currentTime = new Date();
         if (passwordRules.rule20(words, currentTime)) {
             rulesChecker[19] = 1;
+            newScore+=5;
             newRulesComponents.unshift(<Rule index={20} text="Your password must include the current time (HH:MM). " passed={true} />);
         } else {
             anewRulesComponents.unshift(<Rule index={20} text="Your password must include the current time (HH:MM). " passed={false} />);
@@ -353,10 +384,16 @@ export default function TextBox() {
         }
     }
     if (rulesChecker[19]===1 && allPassed){
-        console.log("win");
+        newScore+=5;
+        if (!cheatActivate){
+            setScore(newScore);
+        }else{
+            setScore(100);
+        }
+        
         setGameWinning(true);
     }
-
+    setScore(newScore);
     setRulesComponents(anewRulesComponents.concat(newRulesComponents));
     setAllPassed(allPassed);
 };
@@ -371,11 +408,11 @@ export default function TextBox() {
 
 
 useEffect(() => {
-    if (rulesChecker[8] === 1 && fireActive) {
+    if (rulesChecker[8] === 1 && fireActive && searchTerm.includes('🔥')) {
         if (burnIntervalRef.current) {
             clearInterval(burnIntervalRef.current);
         }
-
+        
         burnIntervalRef.current = setInterval(() => {
             if (searchTerm.length > 0) {
                 const lastCharIndex = searchTerm.length - 3;
@@ -394,7 +431,7 @@ useEffect(() => {
 
 
 useEffect(() => {
-    if (rulesChecker[12] === 1 && searchTerm.includes('🐔')) {
+    if (rulesChecker[12] === 1 && searchTerm.includes('🐔') && !cheatActive) {
         if (wormsIntervalRef.current) {
             clearInterval(wormsIntervalRef.current);
         }
@@ -416,7 +453,7 @@ useEffect(() => {
         }, timeInterval);
 
         return () => clearInterval(wormsIntervalRef.current);
-    } else if (rulesChecker[12]===1 && !searchTerm.includes('🐔')) {
+    } else if (rulesChecker[12]===1 && !searchTerm.includes('🐔') &&!cheatActive) {
         setGameOver(true);
     }
 }, [rulesChecker, searchTerm]);
@@ -428,9 +465,8 @@ useEffect(() => {
 
     // algo gameover
     useEffect(()=> {
-        if (rulesChecker[10]===1 && !searchTerm.includes('🥚') && !rulesChecker[13]===1 ){
+        if (rulesChecker[10]===1 && !searchTerm.includes('🥚') && rulesChecker[12]===0 && !cheatActive){
             setGameOver(true);
-            // console.log(gameOver);
         }
         },[searchTerm]);
     
@@ -489,22 +525,11 @@ useEffect(() => {
       }, [countries, captchas]);
 
     useEffect(()=>{
-        console.log('sini');
-        let x = Math.floor(Math.random() * 10);
-        if (x + flags > 9)
-        {   
-            x=Math.floor(Math.random() * 5);
-        }
-        let newCountry = countries.slice(x,x+flags);
-        let newCountryName= countryName.slice(x,x+flags);
-        setCountryShown(newCountry);
-        setCountryNameShown(newCountryName);
-
-        x = (Math.floor(Math.random() * 6))
-        setCaptchaNameShown(captchasName.at(x));
-        setCaptchasShown(captchas.at(x));
-
-    },[gameLevel,countries,countryName,flags,captchas]);
+        refreshImagesCountry();
+    },[gameLevel,countries]);
+    useEffect(()=>{
+        refreshImagesCaptchas();
+    },[gameLevel,captchas]);
 
     
    
@@ -530,7 +555,7 @@ useEffect(() => {
             rulesChecker[17] * 0.05 +
             rulesChecker[18] * 0.05 +
             rulesChecker[19] * 0.05;
-        return totalScore * 100;
+        return Math.round(totalScore * 100);
     }
     const refreshImagesCaptchas = () => {
         let x = (Math.floor(Math.random() * 6))
@@ -550,19 +575,148 @@ useEffect(() => {
       };
 
       useEffect(() => {
+        
         checkRules(searchTerm);
+        // console.log(forbiddenLetters);
         // console.log(countryName);
-        console.log(forbiddenLetters);
-    }, [searchTerm,countries,captchas,rulesChecker,gameLevel,refreshImagesCaptchas,refreshImagesCountry]);
+        // console.log(forbiddenLetters);
+    }, [searchTerm,captchaShown,countryShown]);
 
     
-     const generateValidAnswer = (words) =>{
+    const cheatActivate = (words) => {
+        setRulesChecker(Array(20).fill(1));
         let cheatAnswer = words;
-        // if (passwordRules.rule20(){
-        //     let x = 0;
-        // }
+    
+        const currentTime = new Date();
+        if (!passwordRules.rule20(cheatAnswer, currentTime)) {
+            cheatAnswer += moment(currentTime).format('HH:mm');
+        }
+    
+        if (!passwordRules.rule16(cheatAnswer)) {
+            cheatAnswer += ' I want IRK';
+        }
+    
+        if (!passwordRules.rule12(cheatAnswer, captchaNameShown)) {
+            cheatAnswer += captchaNameShown;
+        }
+    
+        if (!passwordRules.rule9(cheatAnswer, romanMul)) {
+            const matches = cheatAnswer.match(/[VXLCDM]+/g);
+            if (matches) {
+                cheatAnswer = cheatAnswer.replace(/[VXLCDM]+/g, match => match.toLowerCase());
+            }
+            if (romanMul === 10) {
+                cheatAnswer += ' X';
+            } else if (romanMul === 25) {
+                cheatAnswer += ' V V';
+            } else {
+                cheatAnswer += ' X X';
+            }
+        }
+    
+        if (!passwordRules.rule8(cheatAnswer, countryNameShown)) {
+            cheatAnswer += ' ' + countryNameShown[0];
+        }
+        if (!passwordRules.rule6(cheatAnswer)) {
+            cheatAnswer += 'june';
+        }
+        if (!passwordRules.rule15(cheatAnswer, forbiddenLetters) || (forbiddenLetters.length ===0)) {
+            const alphabet = 'abcdefghijklmnopqrstuvwxyz';
+            const forbiddenLettersCheat = alphabet.split('').filter(letter => !cheatAnswer.includes(letter));
+            setForbiddenLetters(forbiddenLettersCheat.slice(0,forbidSum));
+        }
+
+        if (!passwordRules.rule13(cheatAnswer)) {
+            cheatAnswer += ' 0000';
+        }
+
+        if (!passwordRules.rule4(cheatAnswer)) {
+            cheatAnswer += '@';
+        }
+
+        
+        if (!passwordRules.rule14(cheatAnswer)) {
+            cheatAnswer += '🐔';
+        }
+    
+        if (!passwordRules.rule17(cheatAnswer, percentageDigits)) {
+            const requiredDigits = Math.ceil((percentageDigits / 100) * cheatAnswer.length);
+            const currentDigits = (cheatAnswer.match(/\d/g) || []).length;
+            
+            if (currentDigits < requiredDigits) {
+                cheatAnswer += '0'.repeat(requiredDigits - currentDigits);
+            }
+        }
+
+        if (!passwordRules.rule5(cheatAnswer, sumDigit)) {
+            let digits = cheatAnswer.match(/\d/g) || [];
+            let sum = digits.reduce((acc, num) => acc + parseInt(num), 0);
+            if (sum > sumDigit) {
+                return 'failed';
+            } else {
+                while (sum < sumDigit) {
+                    cheatAnswer += '1';
+                    sum += 1;
+                }
+            }
+        }
+
+        if (!passwordRules.rule19(cheatAnswer)) {
+        
+            const nextPrime = (num) => {
+                while (!passwordRules.isPrime(num)) {
+                    num++;
+                }
+                return num;
+            };
+        
+            const targetLength = nextPrime(cheatAnswer.length);
+            console.log(targetLength);
+            cheatAnswer = cheatAnswer.padEnd(targetLength-2, '0');
+        }
+
+        if (!passwordRules.rule18(cheatAnswer)) {
+            const removeSubstringsOfOne = (str, n) => {
+                const regex = new RegExp(`1{${n}}`, 'g');
+                const replacement = '0'.repeat(n);
+                return str.replace(regex, replacement);
+            };
+            let lengthAnswer = cheatAnswer.length+2;
+            let first = Math.floor(lengthAnswer/10);
+            let second = lengthAnswer%10;
+            cheatAnswer = removeSubstringsOfOne(cheatAnswer, first);
+            cheatAnswer = removeSubstringsOfOne(cheatAnswer, second);
+            cheatAnswer += cheatAnswer.length+2;
+        }
+        if (!passwordRules.rule5(cheatAnswer, sumDigit)) {
+            let digits = cheatAnswer.match(/\d/g) || [];
+            let sum = digits.reduce((acc, num) => acc + parseInt(num), 0);
+        
+            if (sum < sumDigit) {
+                let cheatArray = cheatAnswer.split('');
+                
+                for (let i = 20; i < cheatArray.length; i++) {
+                    if (cheatArray[i] === '0') {
+                        for (let replaceDigit = 9; replaceDigit >= 1; replaceDigit--) {
+                            if (sum + replaceDigit <= sumDigit) {
+                                cheatArray[i] = replaceDigit.toString();
+                                sum += replaceDigit;
+                                break;
+                            }
+                        }
+                    }
+                    if (sum === sumDigit) {
+                        break;
+                    }
+                }
+                
+                cheatAnswer = cheatArray.join('');
+            }
+        }
+        
         return cheatAnswer;
-     };
+    };
+    
 
 
     return (
@@ -581,7 +735,10 @@ useEffect(() => {
           autoComplete="off"
         >
 
-          <Box sx={{ display: 'flex', width: '100%', justifyContent: 'center', alignItems: 'center',padding:'10px' }}>
+          <Box sx={{ display: 'flex', width: '100%', justifyContent: 'center', alignItems: 'center',padding:'10px',gap: '10px' }}>
+          <Typography variant="body1" sx={{ paddingLeft: 1 }}>
+              Highest Score : {calculateScore().toString().slice(0,2)}
+            </Typography>
             <GameModeSelector gameLevel={gameLevel} onLevelChange={setGameLevel}  />
             {rulesChecker[13] === 1 && (<ForbiddenLetterUI setForbiddenLetters={handleSetForbiddenLetters} />  )}
         </Box>
@@ -605,7 +762,12 @@ useEffect(() => {
             sx={{
               display: 'flex',
               alignItems: 'center',
-              width: '33%',
+              justifyContent: 'center', 
+                width: '33%',
+                gap: '10px',
+                margin: 'auto' ,
+                padding: '5px',
+                position: 'relative'
             }}
           >
             <TextField 
@@ -622,10 +784,11 @@ useEffect(() => {
                     borderColor: 'black',
                   },
                 },
-                width: '100%', // Mengatur lebar TextField
+                
+                width: '100%', 
               }} 
             />
-            <Typography variant="body1" sx={{ paddingLeft: 1 }}>
+            <Typography variant="body1" sx={{position: 'absolute', right: '-30px',  }}>
               {(searchTerm.length - (searchTerm.split('🔥').length - 1) - (searchTerm.split('🥚').length - 1) - (searchTerm.split('🐛').length - 1) - (searchTerm.split('🐔').length - 1))}
             </Typography>
           </Box>
