@@ -1,7 +1,7 @@
 ## App Description
 
 ```
-This app is an enthralling adaptation of the [Game](https://neal.fun/password-game/) 
+This app is an enthralling adaptation of the [Game](https://neal.fun/password-game/)
 where users are challenged to create a password that adheres to specific rules. 
 Each rule appears sequentially as the previous one is fulfilled. 
 There are a total of 20 unique and captivating rules. 
