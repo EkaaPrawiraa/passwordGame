@@ -54,8 +54,17 @@ Flexibility: By using regex, you can easily adjust search and replace patterns a
 
 ## Screenshot
 ![StartGame](image-2.png)
+```
+The interface when game first time launched.
+```
 ![WINNING](image-1.png)
+```
+The interface when user winning the game.
+```
 ![GAME OVER](image.png)
+```
+The interface when user losing the game.
+```
 
 
 ## Study References
