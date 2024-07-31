@@ -1,54 +1,47 @@
-## Deskripsi Aplikasi
+## App Description
 
-### Aplikasi ini adalah sebuah implemntasi dari referensi [game](https://neal.fun/password-game/) dimana game tersebut mengharuskan penggunanya untuk membuat sebuah password yang sesuai dengan rules rules yang ada. Setiap rules akan bermunculan secara sekuensial apabila rules sebelumnya sudah terpenuhi. Total terdapat 20 rules yang unik dan menarik, ayo coba mainkan!
+```bash
+This app is an enthralling adaptation of the [game](https://neal.fun/password-game/) where users are challenged to create a password that adheres to specific rules. Each rule appears sequentially as the previous one is fulfilled. There are a total of 20 unique and captivating rules. Give it a try and experience the excitement!
+```
 
-<<<<<<< Updated upstream
-``Teknologi, Bahasa, dan Framework yang Digunakan``
+## Frameworks
 
-```Bahasa Pemrograman: JavaScript, HTML,CSS```
-=======
-## Teknologi, Bahasa, dan Framework yang Digunakan
-
- ```bash
-Bahasa Pemrograman: JavaScript, HTML,CSS
->>>>>>> Stashed changes
-Framework Frontend: React.js
-Framework Backend: Express.js
+```bash
+Programming Language: JavaScript, HTML, CSS
+Frontend Framework: React.js
+Backend Framework: Express.js
 Database: MongoDB
-Alat Pengelolaan Paket: npm
-<<<<<<< Updated upstream
-=======
+Package Management Tool: npm
 ```
->>>>>>> Stashed changes
 
-## Struktur Program
+## Program's Structure
 ```bash
-/backend: Direktori utama untuk kode sumber backend aplikasi yang mengatur data dari database.
-/src: Direktori utama untuk kode sumber frontend aplikasi.
-/src/components: Komponen React untuk UI pengguna berupa tampilan untuk pemilihan mode game, rules, dan pemilihan huruf terlarang.
-/src/pages: Halaman utama dari game dan juga halaman untuk result dari permainan, algoritma dari permainan secara kesuluruhan berada di homepage.
-/utils: Fungsi utilitas berupa algoritma identifikasi password sesuai rules yang ada.
-/public: Berisi file statis seperti index.html dan aset lainnya.
+/backend: The main directory for the application's backend source code, managing data from the database.  
+/src: The main directory for the application's frontend source code, managing UI.  
+/src/components: React components for the user interface, including views for game mode selection, rules, and forbidden letter selection.  
+/src/pages: The main game page and result page, with the overall game algorithm located on the homepage.  
+/utils: Utility functions for password identification algorithms according to the given rules.  
+/public: Contains static files such as index.html and other assets.
 ```
 
 
-## Algoritma Regex (Regular Expression)
+## Regex Algorithm (Regular Expression)
 ```bash
-Regex (Regular Expression) adalah algoritma yang digunakan untuk pencocokan dan manipulasi string berdasarkan pola tertentu. Dalam konteks aplikasi ini, regex digunakan untuk menemukan dan mengganti substring dalam string berdasarkan pola tertentu.
-Alasan Penggunaan:
-Efisiensi: Regex adalah alat yang sangat efisien untuk pencocokan pola dan manipulasi string, terutama ketika pola yang dicari memiliki struktur tetap dan bisa diatur dinamis.
-Fleksibilitas: Dengan menggunakan regex, kamu dapat dengan mudah menyesuaikan pola pencarian dan penggantian sesuai kebutuhan aplikasi. Regex memungkinkan pencarian dan penggantian yang kompleks dalam satu baris kode.
+Regular Expressions (Regex) are algorithms used for matching and manipulating strings based on specific patterns. In the context of this application, regex is utilized to find and replace substrings within a string based on certain patterns.
+Reasons for Usage:
+Efficiency: Regex is a highly efficient tool for pattern matching and string manipulation, especially when the searched patterns have a fixed structure and can be dynamically configured.
+Flexibility: By using regex, you can easily adjust search and replace patterns according to the application's needs. Regex allows for complex search and replacement operations in a single line of code.
 ```
 
-## Cara menjalankan program
+## How to run
 ```bash
-1. Clone Repository ini
+1. Clone this Repo or Download the release's version
 ```
 ```bash
-2. npm install
+2. npm install #for all the dependencies needed.
 ```
 ```bash
-3. npm run start
+3. npm run start #backend and frontend are running concurently.
 ```
 
 ## Screenshot
