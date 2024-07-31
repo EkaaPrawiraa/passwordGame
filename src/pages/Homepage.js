@@ -57,17 +57,17 @@ export default function TextBox() {
       setForbiddenLetters(letters);
     };
   
-    const colorIndices = [1, 3, 5]; // Indeks
-    const color = "red"; 
+    // const colorIndices = [1, 3, 5]; // Indeks
+    // const color = "red"; 
   
-    const formatSearchTerm = (term, indices, color) => {
-      return term.split('').map((char, index) => {
-        if (indices.includes(index)) {
-          return <span key={index} style={{ color }}>{char}</span>;
-        }
-        return char;
-      });
-    };
+    // const formatSearchTerm = (term, indices, color) => {
+    //   return term.split('').map((char, index) => {
+    //     if (indices.includes(index)) {
+    //       return <span key={index} style={{ color }}>{char}</span>;
+    //     }
+    //     return char;
+    //   });
+    // };
 
     useEffect(() => {
         if (gameWinning || gameOver) {
@@ -83,9 +83,9 @@ export default function TextBox() {
 
     useEffect(() => {
         const levelSettings = {
-            easy: { wordLength: 5, timeInterval: 5000, sumDigit: 15, flags: 5, romanMul: 10, totalWorm: 1, percentageDigit: 10,forbidSum:1 },
-            medium: { wordLength: 10, timeInterval: 4000, sumDigit: 20, flags: 4, romanMul: 25, totalWorm: 2, percentageDigit: 20, forbidSum : 2 },
-            hard: { wordLength: 15, timeInterval: 2000, sumDigit: 35, flags: 2, romanMul: 100, totalWorm: 3, percentageDigit: 40,forbidSum : 3}
+            easy: { wordLength: 5, timeInterval: 5000, sumDigit: 20, flags: 5, romanMul: 10, totalWorm: 1, percentageDigit: 10,forbidSum:1 },
+            medium: { wordLength: 10, timeInterval: 4000, sumDigit:30, flags: 4, romanMul: 25, totalWorm: 2, percentageDigit: 20, forbidSum : 2 },
+            hard: { wordLength: 15, timeInterval: 2000, sumDigit: 40, flags: 2, romanMul: 100, totalWorm: 3, percentageDigit: 40,forbidSum : 3}
         };
         const settings = levelSettings[gameLevel];
         if (settings) {
@@ -115,7 +115,7 @@ export default function TextBox() {
     }
     
     const checkRules = (words) => {
-        // console.log("sono");
+        // console.log(countryShown);
     const newRulesComponents = [];
     const anewRulesComponents = [];
     let allPassed = true;
@@ -229,15 +229,15 @@ export default function TextBox() {
         }
     }
 
-    if (rulesChecker[8] === 1 && !fireActive && !searchTerm.includes('🔥')&& !firstTime && !cheatActivate) {
+    if (rulesChecker[8] === 1 && !fireActive && !searchTerm.includes('🔥')&& !firstTime && !cheatActive) {
         let randomsnum = Math.floor(Math.random() * 26);
         if (randomsnum === 7) {
             setSearchTerm(words.slice(0,-1)+'🔥');
         }
     }
     if (rulesChecker[8] === 1) {
-        if (firstTime && !cheatActivate){
-            
+        
+        if (firstTime && !cheatActive){
             setSearchTerm(words.slice(0,-1)+'🔥');
             setFirstTime(false);
         }
@@ -251,16 +251,17 @@ export default function TextBox() {
         } 
         if (!fireActive && !searchTerm.includes('🔥')){
           newRulesComponents.unshift(<Rule index={10} text={`Oh no! Your password is on fire 🔥. Quick, put it out!`} passed={true} />);
-          newScore+=5;
+          
           if (!firstTime){
               rulesChecker[9] = 1;
+              newScore+=5;
           }
         }
         
     }
 
     if (rulesChecker[9] === 1) {
-        if (addsEgg && !cheatActivate){
+        if (addsEgg && !cheatActive){
             setSearchTerm(words + '🥚')
             setAddsEgg(false);
             newRulesComponents.unshift(<Rule index={11} text="🥚 This is my chicken Paul. He hasn’t hatched yet. Please put him in your password and keep him safe" passed={true} />);
@@ -304,7 +305,7 @@ export default function TextBox() {
             setSearchTerm(newstr);
         }
         newRulesComponents.unshift(<Rule index={14} text={`🐔 Paul has hatched ! Please don’t forget to feed him. He eats ${totalWorm} 🐛 every ${timeInterval/1000} second`} passed={true} />);
-        if (words.includes('🐔') || cheatActivate){
+        if (words.includes('🐔') || cheatActive){
             rulesChecker[13] = 1;
             newScore+=10;
         }else{
@@ -327,7 +328,7 @@ export default function TextBox() {
 
     if (rulesChecker[14] === 1) {
         if (passwordRules.rule16(words)) {
-            newScore+=10;
+            newScore+=1;
             rulesChecker[15] = 1;
             newRulesComponents.unshift(<Rule index={16} text="Your password must contain one of the following words: I want IRK | I need IRK | I love IRK." passed={true} />);
         } else {
@@ -381,31 +382,30 @@ export default function TextBox() {
         } else {
             anewRulesComponents.unshift(<Rule index={20} text="Your password must include the current time (HH:MM). " passed={false} />);
             allPassed = false;
-        }
+        }const currentTimeString = moment(currentTime).format('HH:mm');
+        // let matches = currentTimeString.match(/\d/g);
+        // let sum = matches.reduce((acc, digit) => acc + parseInt(digit, 10), 0);
+        // let matches1 = words.match(/\d/g);
+        // let sum1 = matches1.reduce((acc, digit) => acc + parseInt(digit, 10), 0);
+        // if (sum+sum1>sumDigit){
+        //     setGameOver(true);
+        // }
+
+        
     }
     if (rulesChecker[19]===1 && allPassed){
         newScore+=5;
-        if (!cheatActivate){
+        if (!cheatActive){
             setScore(newScore);
         }else{
             setScore(100);
         }
-        
         setGameWinning(true);
     }
     setScore(newScore);
     setRulesComponents(anewRulesComponents.concat(newRulesComponents));
     setAllPassed(allPassed);
 };
-
-// useEffect(()=>{
-//     if (gameWinning){
-//         console.log('win');
-//     }
-
-// },[gameWinning]);
-
-
 
 useEffect(() => {
     if (rulesChecker[8] === 1 && fireActive && searchTerm.includes('🔥')) {
@@ -526,7 +526,7 @@ useEffect(() => {
 
     useEffect(()=>{
         refreshImagesCountry();
-    },[gameLevel,countries]);
+    },[gameLevel,countries,flags]);
     useEffect(()=>{
         refreshImagesCaptchas();
     },[gameLevel,captchas]);
@@ -550,7 +550,7 @@ useEffect(() => {
             rulesChecker[12] * 0.1 +
             rulesChecker[13] * 0.1 +
             rulesChecker[14] * 0.1 +
-            rulesChecker[15] * 0.1 +
+            rulesChecker[15] * 0.01 +
             rulesChecker[16] * 0.05 +
             rulesChecker[17] * 0.05 +
             rulesChecker[18] * 0.05 +
@@ -575,11 +575,7 @@ useEffect(() => {
       };
 
       useEffect(() => {
-        
         checkRules(searchTerm);
-        // console.log(forbiddenLetters);
-        // console.log(countryName);
-        // console.log(forbiddenLetters);
     }, [searchTerm,captchaShown,countryShown]);
 
     
@@ -662,28 +658,28 @@ useEffect(() => {
         }
 
         if (!passwordRules.rule19(cheatAnswer)) {
-        
             const nextPrime = (num) => {
+                num +=2;
+                if (num % 2 === 0) num++;
                 while (!passwordRules.isPrime(num)) {
-                    num++;
+                    num += 2;
                 }
                 return num;
             };
-        
-            const targetLength = nextPrime(cheatAnswer.length);
-            console.log(targetLength);
+            const targetLength = nextPrime(cheatAnswer.length+2);
+            console.log('target' +targetLength);
             cheatAnswer = cheatAnswer.padEnd(targetLength-2, '0');
         }
 
         if (!passwordRules.rule18(cheatAnswer)) {
             const removeSubstringsOfOne = (str, n) => {
-                const regex = new RegExp(`1{${n}}`, 'g');
                 const replacement = '0'.repeat(n);
-                return str.replace(regex, replacement);
+                return str.replace('1'.repeat(n), replacement);
             };
             let lengthAnswer = cheatAnswer.length+2;
             let first = Math.floor(lengthAnswer/10);
             let second = lengthAnswer%10;
+            
             cheatAnswer = removeSubstringsOfOne(cheatAnswer, first);
             cheatAnswer = removeSubstringsOfOne(cheatAnswer, second);
             cheatAnswer += cheatAnswer.length+2;
@@ -695,8 +691,8 @@ useEffect(() => {
             if (sum < sumDigit) {
                 let cheatArray = cheatAnswer.split('');
                 
-                for (let i = 20; i < cheatArray.length; i++) {
-                    if (cheatArray[i] === '0') {
+                for (let i = cheatArray.length-2; i > 20; i--) {
+                    if (cheatArray[i] === '0' ) {
                         for (let replaceDigit = 9; replaceDigit >= 1; replaceDigit--) {
                             if (sum + replaceDigit <= sumDigit) {
                                 cheatArray[i] = replaceDigit.toString();
@@ -736,7 +732,7 @@ useEffect(() => {
         >
 
           <Box sx={{ display: 'flex', width: '100%', justifyContent: 'center', alignItems: 'center',padding:'10px',gap: '10px' }}>
-          <Typography variant="body1" sx={{ paddingLeft: 1 }}>
+          <Typography variant="body1" sx={{}}>
               Highest Score : {calculateScore().toString().slice(0,2)}
             </Typography>
             <GameModeSelector gameLevel={gameLevel} onLevelChange={setGameLevel}  />
@@ -788,6 +784,7 @@ useEffect(() => {
                 width: '100%', 
               }} 
             />
+
             <Typography variant="body1" sx={{position: 'absolute', right: '-30px',  }}>
               {(searchTerm.length - (searchTerm.split('🔥').length - 1) - (searchTerm.split('🥚').length - 1) - (searchTerm.split('🐛').length - 1) - (searchTerm.split('🐔').length - 1))}
             </Typography>
