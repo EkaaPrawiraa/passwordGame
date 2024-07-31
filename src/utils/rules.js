@@ -154,6 +154,73 @@ function rule20(text, currentTime) {
   return text.includes(currentTimeString);
 }
 
+function rule21(text){
+  return text.includes('paham');
+}
+function isPalindrome(word) {
+  const cleanedWord = word.toLowerCase();
+  const reversedWord = cleanedWord.split('').reverse().join('');
+  return cleanedWord === reversedWord;
+}
+function rule22(text) {
+  const words = text.split(' ');
+  for (let word of words) {
+    if (isPalindrome(word)) {
+      return true;
+    }
+  }
+  return false;
+}
+function rule23(text) {
+  const alphabet = 'abcdefghijklmnopqrstuvwxyz';
+  const passwordLower = text.toLowerCase();
+  for (let i = 0; i < alphabet.length - 2; i++) {
+      const sequence = alphabet.slice(i, i + 3);
+      if (passwordLower.includes(sequence)) {
+          return true;
+      }
+  }
+  return false;
+}
+const chemicalElements = [
+  "H", "He", "Li", "Be", "B", "C", "N", "O", "F", "Ne",
+  "Na", "Mg", "Al", "Si", "P", "S", "Cl", "Ar", "K", "Ca",
+  "Sc", "Ti", "V", "Cr", "Mn", "Fe", "Co", "Ni", "Cu", "Zn",
+  "Ga", "Ge", "As", "Se", "Br", "Kr", "Rb", "Sr", "Y", "Zr",
+  "Nb", "Mo", "Tc", "Ru", "Rh", "Pd", "Ag", "Cd", "In", "Sn",
+  "Sb", "Te", "I", "Xe", "Cs", "Ba", "La", "Ce", "Pr", "Nd",
+  "Pm", "Sm", "Eu", "Gd", "Tb", "Dy", "Ho", "Er", "Tm", "Yb",
+  "Lu", "Hf", "Ta", "W", "Re", "Os", "Ir", "Pt", "Au", "Hg",
+  "Tl", "Pb", "Bi", "Po", "At", "Rn", "Fr", "Ra", "Ac", "Th",
+  "Pa", "U", "Np", "Pu", "Am", "Cm", "Bk", "Cf", "Es", "Fm",
+  "Md", "No", "Lr", "Rf", "Db", "Sg", "Bh", "Hs", "Mt", "Ds",
+  "Rg", "Cn", "Nh", "Fl", "Mc", "Lv", "Ts", "Og"
+];
+
+function rule24(text) {
+  return chemicalElements.some(element => text.includes(element));
+}
+
+function rule25(text){
+  return text.includes('IF') || text.includes('STI');
+}
+function rule26(text){
+  return text.includes('40132');
+}
+function rule27(password) {
+  const currencySymbols = [
+      "$", "€", "£", "¥", "₹", "₩", "₽", "฿", "₫", "₴",
+      "₪", "₣", "₱", "₭", "₦", "₲", "₵", "₡", "₿", "¢", "A$", "C$", "HK$", "S$",
+      "R$", "Kč", "Ft", "Rp", "₪", "₨", "zł", "CHF", "₺", "د.إ", "ر.س", "﷼", "₫"
+  ];
+
+  return currencySymbols.some(symbol => password.includes(symbol));
+}
+
+
+
+
+
 
 const passwordRules = {
   rule1,
@@ -179,5 +246,13 @@ const passwordRules = {
   romanToInt,
   isLeapYear,
   isPrime,
+  rule21,
+  rule22,
+  rule23,
+  rule24,
+  rule25,
+  rule26,
+  rule27,
+  chemicalElements,
 };
 export default passwordRules;

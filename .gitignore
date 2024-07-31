@@ -89,3 +89,4 @@ coverage/
 *.tgz
 *.lock-wscript
 ._*
+.vercel
