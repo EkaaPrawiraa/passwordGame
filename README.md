@@ -1,7 +1,11 @@
 ## App Description
 
 ```bash
-This app is an enthralling adaptation of the [game](https://neal.fun/password-game/) where users are challenged to create a password that adheres to specific rules. Each rule appears sequentially as the previous one is fulfilled. There are a total of 20 unique and captivating rules. Give it a try and experience the excitement!
+This app is an enthralling adaptation of the [Game](https://neal.fun/password-game/) 
+where users are challenged to create a password that adheres to specific rules. 
+Each rule appears sequentially as the previous one is fulfilled. 
+There are a total of 20 unique and captivating rules. 
+Give it a try and experience the excitement!
 ```
 
 ## Frameworks
@@ -28,9 +32,13 @@ Package Management Tool: npm
 ## Regex Algorithm (Regular Expression)
 ```bash
 Regular Expressions (Regex) are algorithms used for matching and manipulating strings based on specific patterns. In the context of this application, regex is utilized to find and replace substrings within a string based on certain patterns.
-Reasons for Usage:
-Efficiency: Regex is a highly efficient tool for pattern matching and string manipulation, especially when the searched patterns have a fixed structure and can be dynamically configured.
-Flexibility: By using regex, you can easily adjust search and replace patterns according to the application's needs. Regex allows for complex search and replacement operations in a single line of code.
+```
+#### Reasons for Usage:
+```bash
+Efficiency: Regex is a highly efficient tool for pattern matching and string manipulation, 
+            especially when the searched patterns have a fixed structure and can be dynamically configured.
+Flexibility: By using regex, you can easily adjust search and replace patterns according to the application's needs. 
+             Regex allows for complex search and replacement operations in a single line of code.
 ```
 
 ## How to run
@@ -38,7 +46,7 @@ Flexibility: By using regex, you can easily adjust search and replace patterns a
 1. Clone this Repo or Download the release's version
 ```
 ```bash
-2. npm install #for all the dependencies needed.
+2. npm install #download all the dependencies needed.
 ```
 ```bash
 3. npm run start #backend and frontend are running concurently.
