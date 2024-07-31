@@ -2,13 +2,13 @@ Deskripsi Aplikasi
 
 Aplikasi ini adalah sebuah implemntasi dari referensi [game](https://neal.fun/password-game/) dimana game tersebut mengharuskan penggunanya untuk membuat sebuah password yang sesuai dengan rules rules yang ada. Setiap rules akan bermunculan secara sekuensial apabila rules sebelumnya sudah terpenuhi. Total terdapat 20 rules yang unik dan menarik, ayo coba mainkan!
 
-``Teknologi, Bahasa, dan Framework yang Digunakan
+``Teknologi, Bahasa, dan Framework yang Digunakan``
 
-```Bahasa Pemrograman: JavaScript, HTML,CSS
+```Bahasa Pemrograman: JavaScript, HTML,CSS```
 Framework Frontend: React.js
 Framework Backend: Express.js
 Database: MongoDB
-Alat Pengelolaan Paket: npm```
+Alat Pengelolaan Paket: npm
 
 ```Struktur Program```
 /backend: Direktori utama untuk kode sumber backend aplikasi yang mengatur data dari database.
