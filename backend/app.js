@@ -14,9 +14,9 @@ const upload = multer({ storage: storage });
 const mongoUri = "mongodb+srv://ekaPrawira:Ep12345678@passwordgame.9j0ecqs.mongodb.net/?retryWrites=true&w=majority&appName=passwordGame";
 
 mongoose.connect(mongoUri)
-    .then(() => console.log('Connected to MongoDB'))
+    .then(() => console.log('Monggo ka MongoDB'))
     .catch(err => {
-        console.error('Failed to connect to MongoDB:', err.message);
+        console.error('tebisaeun ka MongoDB:', err.message);
         console.error('Error code:', err.code);
         console.error('Error stack:', err.stack);
     });
@@ -49,7 +49,7 @@ app.post('/captchas', upload.single('image'), async (req, res) => {
             filename: req.file.originalname,
         });
         await img.save();
-        res.send('Image uploaded successfully!');
+        res.send('bisaeuy');
     } catch (err) {
         res.status(500).send(err);
     }
@@ -63,7 +63,7 @@ app.post('/countries', upload.single('image'), async (req, res) => {
             filename: req.file.originalname,
         });
         await img.save();
-        res.send('Image uploaded successfully!');
+        res.send('bisa euy');
     } catch (err) {
         res.status(500).send(err);
     }

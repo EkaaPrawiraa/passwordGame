@@ -1,7 +1,7 @@
 import React, {useEffect, useState,useRef} from 'react';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
-import passwordRules from '../rules';
+import passwordRules from '../utils/rules';
 import Rule from '../component/RuleUI';
 import Typography from '@mui/material/Typography';
 import GameModeSelector from '../component/GameModeUI';
